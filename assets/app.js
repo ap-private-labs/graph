@@ -65,7 +65,7 @@ function areaColors(topic) {
 }
 
 function layout(topic, width, height) {
-  const margin = { top: 70, right: 110, bottom: 76, left: 110 };
+  const margin = { top: 82, right: 170, bottom: 92, left: 150 };
   const years = topic.papers.map((paper) => paper.year);
   const minYear = 2019;
   const maxYear = Math.max(...years);
@@ -85,11 +85,22 @@ function layout(topic, width, height) {
   grouped.forEach((papersForYear, year) => {
     const x = margin.left + ((year - minYear) / yearSpan) * (width - margin.left - margin.right);
     const usable = height - margin.top - margin.bottom;
-    const step = Math.min(88, usable / Math.max(1, papersForYear.length));
-    const start = margin.top + usable / 2 - ((papersForYear.length - 1) * step) / 2;
+    const columns = papersForYear.length > 4 ? 2 : 1;
+    const rows = Math.ceil(papersForYear.length / columns);
+    const step = Math.min(116, usable / Math.max(1, rows));
+    const laneGap = Math.min(92, Math.max(54, (width - margin.left - margin.right) / Math.max(8, yearSpan * 5)));
+    const start = margin.top + usable / 2 - ((rows - 1) * step) / 2;
     papersForYear.forEach((paper, index) => {
-      const jitter = index % 2 === 0 ? -10 : 10;
-      points.set(paper.id, { x: x + jitter, y: start + index * step });
+      const row = Math.floor(index / columns);
+      const column = index % columns;
+      const laneOffset = columns === 1 ? 0 : column === 0 ? -laneGap : laneGap;
+      const stagger = row % 2 === 0 ? -14 : 14;
+      const labelSide = (column + row) % 2 === 0 ? "right" : "left";
+      points.set(paper.id, {
+        x: x + laneOffset + stagger,
+        y: start + row * step,
+        labelSide
+      });
     });
   });
 
@@ -255,6 +266,12 @@ function drawGraph() {
 
     const radius = active ? 18 : 13;
     group.append(makeSvg("circle", {
+      class: "node-hit-target",
+      cx: point.x,
+      cy: point.y,
+      r: 28
+    }));
+    group.append(makeSvg("circle", {
       class: "node-halo",
       cx: point.x,
       cy: point.y,
@@ -269,18 +286,24 @@ function drawGraph() {
     }));
 
     const label = shortTitle(paper.title);
-    const labelX = point.x + 22;
-    const labelY = point.y + 4;
     const labelWidth = Math.min(190, Math.max(62, label.length * 7.2 + 16));
+    const labelOnLeft = point.labelSide === "left";
+    const labelX = labelOnLeft ? point.x - 22 : point.x + 22;
+    const labelY = point.y + 4;
     group.append(makeSvg("rect", {
       class: "node-label-bg",
-      x: labelX - 7,
+      x: labelOnLeft ? labelX - labelWidth + 7 : labelX - 7,
       y: labelY - 16,
       width: labelWidth,
       height: 24,
       rx: 6
     }));
-    const text = makeSvg("text", { class: "node-label", x: labelX, y: labelY });
+    const text = makeSvg("text", {
+      class: "node-label",
+      x: labelX,
+      y: labelY,
+      "text-anchor": labelOnLeft ? "end" : "start"
+    });
     text.textContent = label;
     group.append(text);
     nodeLayer.append(group);
