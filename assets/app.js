@@ -65,7 +65,7 @@ function areaColors(topic) {
 }
 
 function layout(topic, width, height) {
-  const margin = { top: 96, right: 220, bottom: 108, left: 190 };
+  const margin = { top: 84, right: 170, bottom: 92, left: 150 };
   const years = topic.papers.map((paper) => paper.year);
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
@@ -87,14 +87,14 @@ function layout(topic, width, height) {
     const usable = height - margin.top - margin.bottom;
     const columns = papersForYear.length > 3 ? 2 : 1;
     const rows = Math.ceil(papersForYear.length / columns);
-    const step = Math.min(148, usable / Math.max(1, rows));
-    const laneGap = Math.min(148, Math.max(96, (width - margin.left - margin.right) / Math.max(6, yearSpan * 4)));
+    const step = Math.min(118, usable / Math.max(1, rows));
+    const laneGap = Math.min(108, Math.max(68, (width - margin.left - margin.right) / Math.max(9, yearSpan * 6)));
     const start = margin.top + usable / 2 - ((rows - 1) * step) / 2;
     papersForYear.forEach((paper, index) => {
       const row = Math.floor(index / columns);
       const column = index % columns;
       const laneOffset = columns === 1 ? 0 : column === 0 ? -laneGap : laneGap;
-      const stagger = columns === 1 ? (row % 2 === 0 ? -18 : 18) : 0;
+      const stagger = columns === 1 ? (row % 2 === 0 ? -12 : 12) : 0;
       const labelSide = columns === 1 ? (row % 2 === 0 ? "right" : "left") : column === 0 ? "left" : "right";
       points.set(paper.id, {
         x: x + laneOffset + stagger,
@@ -156,7 +156,7 @@ function shortTitle(title) {
     ["ILVR", "ILVR"],
     ["RePaint", "RePaint"],
     ["Palette", "Palette"],
-    ["Solving Linear Inverse Problems", "Denoiser Prior"],
+    ["Solving Linear Inverse Problems", "Denoiser"],
     ["Denoising Diffusion Restoration", "DDRM"],
     ["Diffusion Posterior Sampling", "DPS"],
     ["Manifold Constraints", "MCG"],
@@ -191,8 +191,8 @@ function updateViewportTransform() {
 function drawGraph() {
   const topic = activeTopic();
   const rect = graph.getBoundingClientRect();
-  const width = Math.max(2600, Math.round(rect.width || 1200));
-  const height = Math.max(1120, Math.round(rect.height || 1040));
+  const width = Math.max(1750, Math.round(rect.width || 1200));
+  const height = Math.max(900, Math.round(rect.height || 860));
   const { incoming, outgoing } = relationMaps(topic);
   const selectedRelations = new Set([
     ...incoming.get(selectedId).map((edge) => `${edge.source}->${edge.target}`),
@@ -294,7 +294,7 @@ function drawGraph() {
     }));
 
     const label = shortTitle(paper.title);
-    const labelWidth = Math.min(158, Math.max(62, label.length * 6.7 + 16));
+    const labelWidth = Math.min(142, Math.max(48, label.length * 6.1 + 14));
     const labelOnLeft = point.labelSide === "left";
     const labelX = labelOnLeft ? point.x - 22 : point.x + 22;
     const labelY = point.y + 4;
@@ -407,7 +407,7 @@ function selectPaper(id) {
 }
 
 function zoomAt(delta, centerX, centerY) {
-  const nextScale = Math.min(2.8, Math.max(0.52, transform.scale * delta));
+  const nextScale = Math.min(2.4, Math.max(0.62, transform.scale * delta));
   const scaleRatio = nextScale / transform.scale;
   transform.x = centerX - (centerX - transform.x) * scaleRatio;
   transform.y = centerY - (centerY - transform.y) * scaleRatio;
@@ -420,7 +420,7 @@ graph.addEventListener("wheel", (event) => {
   const rect = graph.getBoundingClientRect();
   const centerX = event.clientX - rect.left;
   const centerY = event.clientY - rect.top;
-  zoomAt(event.deltaY < 0 ? 1.12 : 0.89, centerX, centerY);
+  zoomAt(event.deltaY < 0 ? 1.045 : 0.957, centerX, centerY);
 }, { passive: false });
 
 graph.addEventListener("pointerdown", (event) => {
@@ -458,8 +458,8 @@ graph.addEventListener("pointercancel", (event) => {
   graph.classList.remove("dragging");
 });
 
-zoomIn.addEventListener("click", () => zoomAt(1.18, graph.clientWidth / 2, graph.clientHeight / 2));
-zoomOut.addEventListener("click", () => zoomAt(0.84, graph.clientWidth / 2, graph.clientHeight / 2));
+zoomIn.addEventListener("click", () => zoomAt(1.1, graph.clientWidth / 2, graph.clientHeight / 2));
+zoomOut.addEventListener("click", () => zoomAt(0.91, graph.clientWidth / 2, graph.clientHeight / 2));
 zoomReset.addEventListener("click", () => {
   transform = { x: 0, y: 0, scale: 1 };
   drawGraph();
