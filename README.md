@@ -1,15 +1,17 @@
-# NeRF Citation Graph
+# AI Works Knowledge Graph
 
-A static website that shows a citation-based knowledge graph for influential NeRF and neural rendering papers.
+A static website that shows citation-based knowledge graphs for influential AI research lineages.
 
 The site is plain HTML, CSS, and JavaScript. It does not need a build step, so GitHub Pages can serve it directly. It also works by opening `index.html` directly in a browser.
 
 ## Included Scope
 
-- 20 papers from 1996 to 2023
+- Topic tabs for NeRF, video diffusion models, and inverse problems with diffusion models
+- Each topic starts at 2019 or later
 - Each paper has a citation band above a 50-citation floor
-- Directed edges represent earlier papers cited by later papers
+- Directed edges represent cited work leading into later citing work
 - Metadata includes title, authors, venue, year, area, citation band, contribution, and source URL
+- The main graph supports drag panning, scroll zooming, zoom buttons, and clickable paper nodes
 
 ## Local Preview
 
@@ -36,12 +38,8 @@ http://localhost:8000
 
 Paper metadata and citation edges live in `data/papers.js`.
 
-Add a paper to `papers`, then add citation relationships to `edges`:
+Add a paper to a topic's `papers`, then add citation relationships to that topic's `edges`:
 
 ```js
-{
-  source: "earlier-paper-id",
-  target: "later-paper-id",
-  relation: "cited for ..."
-}
+["earlier-paper-id", "later-paper-id", "cited for ..."]
 ```

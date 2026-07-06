@@ -1,88 +1,41 @@
-const { edges, papers } = window.GRAPH_DATA;
+const { topics } = window.GRAPH_DATA;
 
-const svg = document.querySelector("#graph");
+const topicTabs = document.querySelector("#topic-tabs");
+const graph = document.querySelector("#graph");
 const detail = document.querySelector("#paper-detail");
-const paperGrid = document.querySelector("#papers");
-const areaFilters = document.querySelector("#area-filters");
-const legend = document.querySelector("#legend");
-const search = document.querySelector("#search");
-const visibleCount = document.querySelector("#visible-count");
-const paperCount = document.querySelector("#paper-count");
-const edgeCount = document.querySelector("#edge-count");
+const graphTitle = document.querySelector("#graph-title");
+const graphSummary = document.querySelector("#graph-summary");
+const graphMeta = document.querySelector("#graph-meta");
+const zoomIn = document.querySelector("#zoom-in");
+const zoomOut = document.querySelector("#zoom-out");
+const zoomReset = document.querySelector("#zoom-reset");
 
-const colorByArea = new Map([
-  ["Image-based rendering", "#c44f3a"],
-  ["Internet photo collections", "#217c7e"],
-  ["Camera geometry", "#5e7f38"],
-  ["Implicit geometry", "#7662a8"],
-  ["Neural scene fields", "#aa5b91"],
-  ["Neural rendering", "#c08a24"],
-  ["Coordinate networks", "#516fb4"],
-  ["Neural radiance fields", "#111827"],
-  ["Unconstrained capture", "#2f8f66"],
-  ["Generalizable NeRF", "#d17634"],
-  ["Anti-aliasing", "#3887a6"],
-  ["Real-time rendering", "#bf3f59"],
-  ["Explicit radiance fields", "#7b6b2c"],
-  ["Acceleration", "#476f6f"],
-  ["Unbounded scenes", "#6c5d99"],
-  ["Compact explicit fields", "#9b5b44"]
-]);
+const colors = [
+  "#be4a3d",
+  "#207b7f",
+  "#6b5ca5",
+  "#b87922",
+  "#507339",
+  "#aa4f7d",
+  "#456db3",
+  "#8a6237",
+  "#d16a32",
+  "#48706b"
+];
 
-const paperById = new Map(papers.map((paper) => [paper.id, paper]));
-const incoming = new Map(papers.map((paper) => [paper.id, []]));
-const outgoing = new Map(papers.map((paper) => [paper.id, []]));
+let activeTopicId = topics[0].id;
+let selectedId = topics[0].papers.find((paper) => paper.title.includes("NeRF"))?.id || topics[0].papers[0].id;
+let transform = { x: 0, y: 0, scale: 1 };
+let isDragging = false;
+let dragStart = { x: 0, y: 0 };
+let dragOrigin = { x: 0, y: 0 };
 
-edges.forEach((edge) => {
-  outgoing.get(edge.source).push(edge);
-  incoming.get(edge.target).push(edge);
-});
-
-let selectedId = "nerf";
-let selectedArea = "All";
-let query = "";
-
-paperCount.textContent = String(papers.length);
-edgeCount.textContent = String(edges.length);
-
-function areas() {
-  return ["All", ...Array.from(new Set(papers.map((paper) => paper.area))).sort()];
+function activeTopic() {
+  return topics.find((topic) => topic.id === activeTopicId);
 }
 
-function visiblePapers() {
-  const lowerQuery = query.trim().toLowerCase();
-  return papers.filter((paper) => {
-    const areaMatches = selectedArea === "All" || paper.area === selectedArea;
-    const text = `${paper.title} ${paper.year} ${paper.venue} ${paper.authors.join(" ")} ${paper.area}`.toLowerCase();
-    return areaMatches && (!lowerQuery || text.includes(lowerQuery));
-  });
-}
-
-function layout(width, height) {
-  const margin = { top: 46, right: 58, bottom: 48, left: 66 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
-  const years = papers.map((paper) => paper.year);
-  const minYear = Math.min(...years);
-  const maxYear = Math.max(...years);
-  const yearSpan = maxYear - minYear || 1;
-  const yearCounts = new Map();
-  const points = new Map();
-
-  papers
-    .slice()
-    .sort((a, b) => a.year - b.year || a.title.localeCompare(b.title))
-    .forEach((paper) => {
-      const indexForYear = yearCounts.get(paper.year) ?? 0;
-      yearCounts.set(paper.year, indexForYear + 1);
-      const x = margin.left + ((paper.year - minYear) / yearSpan) * innerWidth;
-      const yearTotal = papers.filter((candidate) => candidate.year === paper.year).length;
-      const spread = Math.min(260, Math.max(0, (yearTotal - 1) * 58));
-      const y = margin.top + innerHeight / 2 - spread / 2 + indexForYear * 58;
-      points.set(paper.id, { x, y });
-    });
-
-  return { margin, minYear, maxYear, points, width, height };
+function activePaper() {
+  return activeTopic().papers.find((paper) => paper.id === selectedId) || activeTopic().papers[0];
 }
 
 function makeSvg(name, attrs = {}) {
@@ -91,72 +44,193 @@ function makeSvg(name, attrs = {}) {
   return element;
 }
 
+function paperMap(topic) {
+  return new Map(topic.papers.map((paper) => [paper.id, paper]));
+}
+
+function relationMaps(topic) {
+  const incoming = new Map(topic.papers.map((paper) => [paper.id, []]));
+  const outgoing = new Map(topic.papers.map((paper) => [paper.id, []]));
+  topic.edges.forEach(([source, target, relation]) => {
+    const edge = { source, target, relation };
+    outgoing.get(source)?.push(edge);
+    incoming.get(target)?.push(edge);
+  });
+  return { incoming, outgoing };
+}
+
+function areaColors(topic) {
+  const areas = Array.from(new Set(topic.papers.map((paper) => paper.area)));
+  return new Map(areas.map((area, index) => [area, colors[index % colors.length]]));
+}
+
+function layout(topic, width, height) {
+  const margin = { top: 70, right: 110, bottom: 76, left: 110 };
+  const years = topic.papers.map((paper) => paper.year);
+  const minYear = 2019;
+  const maxYear = Math.max(...years);
+  const yearSpan = Math.max(1, maxYear - minYear);
+  const grouped = new Map();
+  const points = new Map();
+
+  topic.papers
+    .slice()
+    .sort((a, b) => a.year - b.year || a.title.localeCompare(b.title))
+    .forEach((paper) => {
+      const bucket = grouped.get(paper.year) || [];
+      bucket.push(paper);
+      grouped.set(paper.year, bucket);
+    });
+
+  grouped.forEach((papersForYear, year) => {
+    const x = margin.left + ((year - minYear) / yearSpan) * (width - margin.left - margin.right);
+    const usable = height - margin.top - margin.bottom;
+    const step = Math.min(88, usable / Math.max(1, papersForYear.length));
+    const start = margin.top + usable / 2 - ((papersForYear.length - 1) * step) / 2;
+    papersForYear.forEach((paper, index) => {
+      const jitter = index % 2 === 0 ? -10 : 10;
+      points.set(paper.id, { x: x + jitter, y: start + index * step });
+    });
+  });
+
+  return { margin, minYear, maxYear, points };
+}
+
+function shortTitle(title) {
+  const aliases = [
+    ["Occupancy Networks", "Occupancy Nets"],
+    ["DeepSDF", "DeepSDF"],
+    ["Scene Representation Networks", "SRN"],
+    ["Neural Volumes", "Neural Volumes"],
+    ["NeRF:", "NeRF"],
+    ["Fourier Features", "Fourier Features"],
+    ["NeRF in the Wild", "NeRF-W"],
+    ["pixelNeRF", "pixelNeRF"],
+    ["Mip-NeRF:", "Mip-NeRF"],
+    ["PlenOctrees", "PlenOctrees"],
+    ["KiloNeRF", "KiloNeRF"],
+    ["Plenoxels", "Plenoxels"],
+    ["Instant Neural Graphics", "Instant-NGP"],
+    ["Mip-NeRF 360", "Mip-NeRF 360"],
+    ["TensoRF", "TensoRF"],
+    ["Direct Voxel", "DVGO"],
+    ["Zip-NeRF", "Zip-NeRF"],
+    ["3D Gaussian", "3D Gaussian Splatting"],
+    ["Generative Modeling by Estimating", "NCSN"],
+    ["Denoising Diffusion Probabilistic", "DDPM"],
+    ["Score-Based Generative", "Score SDE"],
+    ["Classifier-Free", "CFG"],
+    ["Video Diffusion Models", "Video Diffusion"],
+    ["Masked Conditional", "MCVD"],
+    ["Make-A-Video", "Make-A-Video"],
+    ["Imagen Video", "Imagen Video"],
+    ["Phenaki", "Phenaki"],
+    ["Tune-A-Video", "Tune-A-Video"],
+    ["Text2Video-Zero", "Text2Video-Zero"],
+    ["Align your Latents", "Video LDM"],
+    ["ModelScope", "ModelScope"],
+    ["AnimateDiff", "AnimateDiff"],
+    ["Stable Video Diffusion", "SVD"],
+    ["VideoPoet", "VideoPoet"],
+    ["Lumiere", "Lumiere"],
+    ["Solving Inverse Problems in Medical Imaging", "Score-MRI"],
+    ["ILVR", "ILVR"],
+    ["RePaint", "RePaint"],
+    ["Palette", "Palette"],
+    ["Solving Linear Inverse Problems", "Denoiser Prior"],
+    ["Denoising Diffusion Restoration", "DDRM"],
+    ["Diffusion Posterior Sampling", "DPS"],
+    ["Manifold Constraints", "MCG"],
+    ["Null-Space Model", "DDNM"],
+    ["Pseudoinverse-Guided", "PiGDM"],
+    ["DiffPIR", "DiffPIR"],
+    ["RED-Diff", "RED-Diff"],
+    ["BlindDPS", "BlindDPS"],
+    ["DMPlug", "DMPlug"]
+  ];
+  const match = aliases.find(([prefix]) => title.startsWith(prefix) || title.includes(prefix));
+  return match ? match[1] : title.split(":")[0];
+}
+
 function edgePath(source, target) {
-  const dx = Math.max(80, Math.abs(target.x - source.x) * 0.46);
-  return `M ${source.x} ${source.y} C ${source.x + dx} ${source.y}, ${target.x - dx} ${target.y}, ${target.x} ${target.y}`;
+  const dx = Math.max(70, Math.abs(target.x - source.x) * 0.42);
+  const verticalBend = Math.sign(target.y - source.y || 1) * 8;
+  return `M ${source.x} ${source.y} C ${source.x + dx} ${source.y + verticalBend}, ${target.x - dx} ${target.y - verticalBend}, ${target.x} ${target.y}`;
 }
 
 function edgeIsActive(edge) {
   return edge.source === selectedId || edge.target === selectedId;
 }
 
-function renderGraph() {
-  const rect = svg.getBoundingClientRect();
-  const width = Math.max(720, Math.round(rect.width || 920));
-  const height = Math.max(620, Math.round(rect.height || 660));
-  const state = layout(width, height);
-  const visibleIds = new Set(visiblePapers().map((paper) => paper.id));
+function drawGraph() {
+  const topic = activeTopic();
+  const rect = graph.getBoundingClientRect();
+  const width = Math.max(1120, Math.round(rect.width || 1200));
+  const height = Math.max(720, Math.round(rect.height || 760));
+  const { incoming, outgoing } = relationMaps(topic);
+  const selectedRelations = new Set([
+    ...incoming.get(selectedId).map((edge) => `${edge.source}->${edge.target}`),
+    ...outgoing.get(selectedId).map((edge) => `${edge.source}->${edge.target}`)
+  ]);
+  const layoutState = layout(topic, width, height);
+  const colorsByArea = areaColors(topic);
 
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  svg.replaceChildren();
+  graph.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  graph.replaceChildren();
 
   const defs = makeSvg("defs");
   const marker = makeSvg("marker", {
-    id: "arrow",
-    viewBox: "0 0 10 10",
-    refX: "8",
-    refY: "5",
-    markerWidth: "6",
-    markerHeight: "6",
-    orient: "auto-start-reverse"
+    id: "arrowhead",
+    viewBox: "0 0 12 12",
+    refX: "10",
+    refY: "6",
+    markerWidth: "8",
+    markerHeight: "8",
+    orient: "auto"
   });
-  marker.append(makeSvg("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: "rgba(24,33,47,0.45)" }));
+  marker.append(makeSvg("path", { d: "M 1 1 L 11 6 L 1 11 z", fill: "#6d7480" }));
   defs.append(marker);
-  svg.append(defs);
+  graph.append(defs);
 
-  const yearLayer = makeSvg("g");
-  const shownYears = [1996, 2006, 2016, 2019, 2020, 2021, 2022, 2023];
-  shownYears.forEach((year) => {
-    const x = state.margin.left + ((year - state.minYear) / (state.maxYear - state.minYear)) * (width - state.margin.left - state.margin.right);
-    yearLayer.append(makeSvg("line", { class: "year-line", x1: x, x2: x, y1: 28, y2: height - 32 }));
-    const label = makeSvg("text", { class: "year-label", x, y: height - 18, "text-anchor": "middle" });
+  const viewport = makeSvg("g", {
+    id: "viewport",
+    transform: `translate(${transform.x} ${transform.y}) scale(${transform.scale})`
+  });
+
+  const yearLayer = makeSvg("g", { class: "years" });
+  for (let year = 2019; year <= layoutState.maxYear; year += 1) {
+    const x = layoutState.margin.left + ((year - layoutState.minYear) / Math.max(1, layoutState.maxYear - layoutState.minYear)) * (width - layoutState.margin.left - layoutState.margin.right);
+    yearLayer.append(makeSvg("line", { class: "year-line", x1: x, x2: x, y1: 42, y2: height - 48 }));
+    const label = makeSvg("text", { class: "year-label", x, y: 34, "text-anchor": "middle" });
     label.textContent = String(year);
     yearLayer.append(label);
-  });
-  svg.append(yearLayer);
+  }
+  viewport.append(yearLayer);
 
-  const edgeLayer = makeSvg("g");
-  edges.forEach((edge) => {
-    const source = state.points.get(edge.source);
-    const target = state.points.get(edge.target);
-    const active = edgeIsActive(edge);
-    const hiddenByFilter = !visibleIds.has(edge.source) || !visibleIds.has(edge.target);
+  const edgeLayer = makeSvg("g", { class: "edges" });
+  topic.edges.forEach(([sourceId, targetId, relation]) => {
+    const source = layoutState.points.get(sourceId);
+    const target = layoutState.points.get(targetId);
+    if (!source || !target) return;
+    const key = `${sourceId}->${targetId}`;
+    const active = selectedRelations.has(key);
     const path = makeSvg("path", {
-      class: `edge ${active ? "active" : ""} ${hiddenByFilter ? "dimmed" : ""}`,
+      class: `edge ${active ? "active" : "quiet"}`,
       d: edgePath(source, target),
-      "marker-end": "url(#arrow)"
+      "marker-end": "url(#arrowhead)",
+      "data-relation": relation
     });
     edgeLayer.append(path);
   });
-  svg.append(edgeLayer);
+  viewport.append(edgeLayer);
 
-  const nodeLayer = makeSvg("g");
-  papers.forEach((paper) => {
-    const point = state.points.get(paper.id);
+  const nodeLayer = makeSvg("g", { class: "nodes" });
+  topic.papers.forEach((paper) => {
+    const point = layoutState.points.get(paper.id);
     const active = paper.id === selectedId;
-    const filtered = !visibleIds.has(paper.id);
+    const linked = paper.id === selectedId || incoming.get(selectedId).some((edge) => edge.source === paper.id) || outgoing.get(selectedId).some((edge) => edge.target === paper.id);
     const group = makeSvg("g", {
-      class: `node-group ${active ? "active" : ""} ${filtered ? "dimmed" : ""}`,
+      class: `node-group ${active ? "active" : ""} ${linked ? "" : "quiet"}`,
       tabindex: "0",
       role: "button",
       "aria-label": paper.title
@@ -169,183 +243,181 @@ function renderGraph() {
       }
     });
 
+    const radius = active ? 18 : 13;
     group.append(makeSvg("circle", {
-      class: "node-ring",
+      class: "node-halo",
       cx: point.x,
       cy: point.y,
-      r: 18
+      r: radius + 9
     }));
     group.append(makeSvg("circle", {
       class: "node",
       cx: point.x,
       cy: point.y,
-      r: active ? 13 : 10,
-      fill: colorByArea.get(paper.area) || "#18212f"
+      r: radius,
+      fill: colorsByArea.get(paper.area)
     }));
 
-    const title = shortTitle(paper.title);
-    const labelX = point.x + 14;
-    const labelY = point.y - 15;
-    const labelWidth = Math.min(178, Math.max(76, title.length * 6.2));
+    const label = shortTitle(paper.title);
+    const labelX = point.x + 22;
+    const labelY = point.y + 4;
+    const labelWidth = Math.min(190, Math.max(62, label.length * 7.2 + 16));
     group.append(makeSvg("rect", {
       class: "node-label-bg",
-      x: labelX - 5,
-      y: labelY - 14,
+      x: labelX - 7,
+      y: labelY - 16,
       width: labelWidth,
-      height: 20,
-      rx: 5
+      height: 24,
+      rx: 6
     }));
-    const label = makeSvg("text", {
-      class: "node-label",
-      x: labelX,
-      y: labelY,
-      "text-anchor": "start"
-    });
-    label.textContent = title;
-    group.append(label);
+    const text = makeSvg("text", { class: "node-label", x: labelX, y: labelY });
+    text.textContent = label;
+    group.append(text);
     nodeLayer.append(group);
   });
-  svg.append(nodeLayer);
+  viewport.append(nodeLayer);
+  graph.append(viewport);
+
+  renderLegend(colorsByArea);
 }
 
-function shortTitle(title) {
-  const aliases = new Map([
-    ["Light Field Rendering", "Light Field Rendering"],
-    ["The Lumigraph", "Lumigraph"],
-    ["Photo Tourism: Exploring Photo Collections in 3D", "Photo Tourism"],
-    ["Structure-from-Motion Revisited", "COLMAP / SfM"],
-    ["Occupancy Networks: Learning 3D Reconstruction in Function Space", "Occupancy Networks"],
-    ["DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation", "DeepSDF"],
-    ["Scene Representation Networks", "SRN"],
-    ["Neural Volumes: Learning Dynamic Renderable Volumes from Images", "Neural Volumes"],
-    ["Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains", "Fourier Features"],
-    ["NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis", "NeRF"],
-    ["NeRF in the Wild: Neural Radiance Fields for Unconstrained Photo Collections", "NeRF-W"],
-    ["pixelNeRF: Neural Radiance Fields from One or Few Images", "pixelNeRF"],
-    ["Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields", "Mip-NeRF"],
-    ["PlenOctrees for Real-time Rendering of Neural Radiance Fields", "PlenOctrees"],
-    ["KiloNeRF: Speeding up Neural Radiance Fields with Thousands of Tiny MLPs", "KiloNeRF"],
-    ["Plenoxels: Radiance Fields without Neural Networks", "Plenoxels"],
-    ["Instant Neural Graphics Primitives with a Multiresolution Hash Encoding", "Instant-NGP"],
-    ["Mip-NeRF 360: Unbounded Anti-Aliased Neural Radiance Fields", "Mip-NeRF 360"],
-    ["TensoRF: Tensorial Radiance Fields", "TensoRF"],
-    ["3D Gaussian Splatting for Real-Time Radiance Field Rendering", "3D Gaussian Splatting"]
-  ]);
-  return aliases.get(title) || title;
-}
-
-function renderFilters() {
-  areaFilters.replaceChildren();
-  areas().forEach((area) => {
-    const button = document.createElement("button");
-    button.className = "chip";
-    button.type = "button";
-    button.textContent = area;
-    button.setAttribute("aria-pressed", String(area === selectedArea));
-    button.addEventListener("click", () => {
-      selectedArea = area;
-      render();
-    });
-    areaFilters.append(button);
-  });
-
+function renderLegend(colorsByArea) {
+  const legend = document.querySelector("#legend");
   legend.replaceChildren();
-  Array.from(colorByArea.entries()).forEach(([area, color]) => {
-    const item = document.createElement("div");
+  colorsByArea.forEach((color, area) => {
+    const item = document.createElement("span");
     item.className = "legend-item";
-    item.innerHTML = `<span class="dot" style="--dot: ${color}"></span><span>${area}</span>`;
+    item.innerHTML = `<span class="dot" style="--dot:${color}"></span>${area}`;
     legend.append(item);
   });
 }
 
+function renderTabs() {
+  topicTabs.replaceChildren();
+  topics.forEach((topic) => {
+    const tab = document.createElement("button");
+    tab.type = "button";
+    tab.className = "topic-tab";
+    tab.setAttribute("aria-pressed", String(topic.id === activeTopicId));
+    tab.textContent = topic.label;
+    tab.addEventListener("click", () => {
+      activeTopicId = topic.id;
+      selectedId = topic.papers[0].id;
+      transform = { x: 0, y: 0, scale: 1 };
+      render();
+    });
+    topicTabs.append(tab);
+  });
+}
+
+function renderTopicHeader() {
+  const topic = activeTopic();
+  graphTitle.textContent = topic.title;
+  graphSummary.textContent = topic.summary;
+  graphMeta.textContent = `${topic.papers.length} papers / ${topic.edges.length} citation links / ${topic.years}`;
+}
+
 function renderDetails() {
-  const paper = paperById.get(selectedId);
-  const paperCites = incoming.get(selectedId);
-  const citedByPaper = outgoing.get(selectedId);
+  const topic = activeTopic();
+  const paper = activePaper();
+  const map = paperMap(topic);
+  const { incoming, outgoing } = relationMaps(topic);
+  const cites = incoming.get(paper.id);
+  const citedBy = outgoing.get(paper.id);
 
   detail.innerHTML = `
     <div class="detail-kicker">${paper.year} / ${paper.venue}</div>
-    <h2 class="detail-title">${paper.title}</h2>
+    <h2>${paper.title}</h2>
     <div class="meta">
-      <span class="pill">${paper.area}</span>
-      <span class="pill">${paper.citationBand} citations</span>
-      <span class="pill">${paper.authors.length} authors</span>
+      <span>${paper.area}</span>
+      <span>${paper.citationBand} citations</span>
+      <span>${paper.authors.length} authors</span>
     </div>
     <p>${paper.contribution}</p>
     <p><strong>Authors:</strong> ${paper.authors.join(", ")}</p>
-    ${relationList("Cites earlier work", paperCites, "source")}
-    ${relationList("Cited by later work", citedByPaper, "target")}
-    <a class="detail-link" href="${paper.url}" target="_blank" rel="noreferrer">Paper source</a>
+    ${relations("Cites", cites, "source", map)}
+    ${relations("Cited by", citedBy, "target", map)}
+    <a class="paper-link" href="${paper.url}" target="_blank" rel="noreferrer">Open paper</a>
   `;
 }
 
-function relationList(title, relationEdges, otherSide) {
-  if (!relationEdges.length) {
-    return "";
-  }
-
-  const items = relationEdges
+function relations(label, edges, side, map) {
+  if (!edges.length) return "";
+  const items = edges
     .map((edge) => {
-      const other = paperById.get(edge[otherSide]);
-      return `<li><strong>${shortTitle(other.title)}</strong>: ${edge.relation}</li>`;
+      const other = map.get(edge[side]);
+      return `<li><button type="button" data-paper="${other.id}">${shortTitle(other.title)}</button><span>${edge.relation}</span></li>`;
     })
     .join("");
-
-  return `<h3>${title}</h3><ul class="relation-list">${items}</ul>`;
+  return `<section class="relations"><h3>${label}</h3><ul>${items}</ul></section>`;
 }
 
-function renderPaperCards() {
-  const visible = visiblePapers();
-  visibleCount.textContent = `${visible.length} shown`;
-  paperGrid.replaceChildren();
-
-  visible
-    .slice()
-    .sort((a, b) => a.year - b.year || a.title.localeCompare(b.title))
-    .forEach((paper) => {
-      const card = document.createElement("article");
-      card.className = "paper-card";
-      card.setAttribute("tabindex", "0");
-      card.setAttribute("role", "button");
-      card.setAttribute("aria-current", String(paper.id === selectedId));
-      card.innerHTML = `
-        <span class="pill">${paper.year} / ${paper.venue}</span>
-        <h3>${paper.title}</h3>
-        <p>${paper.area} / ${paper.citationBand} citations</p>
-      `;
-      card.addEventListener("click", () => selectPaper(paper.id));
-      card.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          selectPaper(paper.id);
-        }
-      });
-      paperGrid.append(card);
-    });
+function bindDetailRelations() {
+  detail.querySelectorAll("[data-paper]").forEach((button) => {
+    button.addEventListener("click", () => selectPaper(button.dataset.paper));
+  });
 }
 
 function selectPaper(id) {
   selectedId = id;
-  renderGraph();
+  drawGraph();
   renderDetails();
-  renderPaperCards();
+  bindDetailRelations();
 }
+
+function zoomAt(delta, centerX, centerY) {
+  const nextScale = Math.min(2.8, Math.max(0.52, transform.scale * delta));
+  const scaleRatio = nextScale / transform.scale;
+  transform.x = centerX - (centerX - transform.x) * scaleRatio;
+  transform.y = centerY - (centerY - transform.y) * scaleRatio;
+  transform.scale = nextScale;
+  drawGraph();
+}
+
+graph.addEventListener("wheel", (event) => {
+  event.preventDefault();
+  const rect = graph.getBoundingClientRect();
+  const centerX = event.clientX - rect.left;
+  const centerY = event.clientY - rect.top;
+  zoomAt(event.deltaY < 0 ? 1.12 : 0.89, centerX, centerY);
+}, { passive: false });
+
+graph.addEventListener("pointerdown", (event) => {
+  isDragging = true;
+  dragStart = { x: event.clientX, y: event.clientY };
+  dragOrigin = { x: transform.x, y: transform.y };
+  graph.setPointerCapture(event.pointerId);
+  graph.classList.add("dragging");
+});
+
+graph.addEventListener("pointermove", (event) => {
+  if (!isDragging) return;
+  transform.x = dragOrigin.x + event.clientX - dragStart.x;
+  transform.y = dragOrigin.y + event.clientY - dragStart.y;
+  drawGraph();
+});
+
+graph.addEventListener("pointerup", (event) => {
+  isDragging = false;
+  graph.releasePointerCapture(event.pointerId);
+  graph.classList.remove("dragging");
+});
+
+zoomIn.addEventListener("click", () => zoomAt(1.18, graph.clientWidth / 2, graph.clientHeight / 2));
+zoomOut.addEventListener("click", () => zoomAt(0.84, graph.clientWidth / 2, graph.clientHeight / 2));
+zoomReset.addEventListener("click", () => {
+  transform = { x: 0, y: 0, scale: 1 };
+  drawGraph();
+});
+
+window.addEventListener("resize", () => window.requestAnimationFrame(drawGraph));
 
 function render() {
-  renderFilters();
-  renderGraph();
+  renderTabs();
+  renderTopicHeader();
+  drawGraph();
   renderDetails();
-  renderPaperCards();
+  bindDetailRelations();
 }
-
-search.addEventListener("input", (event) => {
-  query = event.target.value;
-  renderGraph();
-  renderPaperCards();
-});
-
-window.addEventListener("resize", () => {
-  window.requestAnimationFrame(renderGraph);
-});
 
 render();

@@ -1,443 +1,681 @@
 window.GRAPH_DATA = {
-papers: [
-  {
-    id: "light-field-rendering",
-    title: "Light Field Rendering",
-    year: 1996,
-    venue: "SIGGRAPH",
-    authors: ["Marc Levoy", "Pat Hanrahan"],
-    area: "Image-based rendering",
-    citationBand: "3k+",
-    url: "https://graphics.stanford.edu/papers/light/",
-    contribution:
-      "Established light fields as a practical representation for synthesizing new views from dense image samples."
-  },
-  {
-    id: "lumigraph",
-    title: "The Lumigraph",
-    year: 1996,
-    venue: "SIGGRAPH",
-    authors: ["Steven J. Gortler", "Radek Grzeszczuk", "Richard Szeliski", "Michael F. Cohen"],
-    area: "Image-based rendering",
-    citationBand: "1k+",
-    url: "https://www.microsoft.com/en-us/research/publication/the-lumigraph/",
-    contribution:
-      "Introduced a closely related 4D light-field style representation with geometric support for view interpolation."
-  },
-  {
-    id: "photo-tourism",
-    title: "Photo Tourism: Exploring Photo Collections in 3D",
-    year: 2006,
-    venue: "SIGGRAPH",
-    authors: ["Noah Snavely", "Steven M. Seitz", "Richard Szeliski"],
-    area: "Internet photo collections",
-    citationBand: "5k+",
-    url: "https://www.cs.cornell.edu/~snavely/publications/photo_tourism/",
-    contribution:
-      "Showed how unordered photo collections can be registered into navigable 3D scenes, a data setting later revisited by NeRF-W."
-  },
-  {
-    id: "colmap",
-    title: "Structure-from-Motion Revisited",
-    year: 2016,
-    venue: "CVPR",
-    authors: ["Johannes L. Schonberger", "Jan-Michael Frahm"],
-    area: "Camera geometry",
-    citationBand: "3k+",
-    url: "https://openaccess.thecvf.com/content_cvpr_2016/html/Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.html",
-    contribution:
-      "Made robust sparse reconstruction and camera pose estimation broadly usable through COLMAP-style SfM pipelines."
-  },
-  {
-    id: "occupancy-networks",
-    title: "Occupancy Networks: Learning 3D Reconstruction in Function Space",
-    year: 2019,
-    venue: "CVPR",
-    authors: ["Lars Mescheder", "Michael Oechsle", "Michael Niemeyer", "Sebastian Nowozin", "Andreas Geiger"],
-    area: "Implicit geometry",
-    citationBand: "2k+",
-    url: "https://arxiv.org/abs/1812.03828",
-    contribution:
-      "Represented 3D shape as a continuous neural occupancy field, helping establish implicit functions for geometry."
-  },
-  {
-    id: "deepsdf",
-    title: "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation",
-    year: 2019,
-    venue: "CVPR",
-    authors: ["Jeong Joon Park", "Peter Florence", "Julian Straub", "Richard Newcombe", "Steven Lovegrove"],
-    area: "Implicit geometry",
-    citationBand: "2k+",
-    url: "https://arxiv.org/abs/1901.05103",
-    contribution:
-      "Popularized continuous signed-distance neural fields for compact shape representation, interpolation, and completion."
-  },
-  {
-    id: "srn",
-    title: "Scene Representation Networks",
-    year: 2019,
-    venue: "NeurIPS",
-    authors: ["Vincent Sitzmann", "Michael Zollhofer", "Gordon Wetzstein"],
-    area: "Neural scene fields",
-    citationBand: "900+",
-    url: "https://arxiv.org/abs/1906.01618",
-    contribution:
-      "Learned continuous 3D scene functions from posed images with differentiable ray marching, directly foreshadowing NeRF."
-  },
-  {
-    id: "neural-volumes",
-    title: "Neural Volumes: Learning Dynamic Renderable Volumes from Images",
-    year: 2019,
-    venue: "SIGGRAPH",
-    authors: ["Stephen Lombardi", "Tomas Simon", "Jason Saragih", "Gabriel Schwartz", "Andreas Lehrmann", "Yaser Sheikh"],
-    area: "Neural rendering",
-    citationBand: "700+",
-    url: "https://arxiv.org/abs/1906.07751",
-    contribution:
-      "Combined learned volumetric scene representations with differentiable rendering for dynamic view synthesis."
-  },
-  {
-    id: "fourier-features",
-    title: "Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains",
-    year: 2020,
-    venue: "NeurIPS",
-    authors: ["Matthew Tancik", "Pratul P. Srinivasan", "Ben Mildenhall", "Sara Fridovich-Keil", "Nithin Raghavan", "Utkarsh Singhal", "Ravi Ramamoorthi", "Jonathan T. Barron", "Ren Ng"],
-    area: "Coordinate networks",
-    citationBand: "2k+",
-    url: "https://arxiv.org/abs/2006.10739",
-    contribution:
-      "Explained why Fourier feature encodings help coordinate MLPs represent high-frequency image and geometry signals."
-  },
-  {
-    id: "nerf",
-    title: "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis",
-    year: 2020,
-    venue: "ECCV",
-    authors: ["Ben Mildenhall", "Pratul P. Srinivasan", "Matthew Tancik", "Jonathan T. Barron", "Ravi Ramamoorthi", "Ren Ng"],
-    area: "Neural radiance fields",
-    citationBand: "20k+",
-    url: "https://arxiv.org/abs/2003.08934",
-    contribution:
-      "Defined scenes as continuous 5D radiance and density fields optimized with differentiable volume rendering from posed images."
-  },
-  {
-    id: "nerf-w",
-    title: "NeRF in the Wild: Neural Radiance Fields for Unconstrained Photo Collections",
-    year: 2021,
-    venue: "CVPR",
-    authors: ["Ricardo Martin-Brualla", "Noha Radwan", "Mehdi S. M. Sajjadi", "Jonathan T. Barron", "Alexey Dosovitskiy", "Daniel Duckworth"],
-    area: "Unconstrained capture",
-    citationBand: "1k+",
-    url: "https://arxiv.org/abs/2008.02268",
-    contribution:
-      "Extended NeRF to tourist photos with appearance embeddings and transient components for lighting and occluder variation."
-  },
-  {
-    id: "pixelnerf",
-    title: "pixelNeRF: Neural Radiance Fields from One or Few Images",
-    year: 2021,
-    venue: "CVPR",
-    authors: ["Alex Yu", "Vickie Ye", "Matthew Tancik", "Angjoo Kanazawa"],
-    area: "Generalizable NeRF",
-    citationBand: "900+",
-    url: "https://arxiv.org/abs/2012.02190",
-    contribution:
-      "Conditioned NeRFs on image features so a model could infer scene radiance from one or a few input views."
-  },
-  {
-    id: "mip-nerf",
-    title: "Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields",
-    year: 2021,
-    venue: "ICCV",
-    authors: ["Jonathan T. Barron", "Ben Mildenhall", "Matthew Tancik", "Peter Hedman", "Ricardo Martin-Brualla", "Pratul P. Srinivasan"],
-    area: "Anti-aliasing",
-    citationBand: "1k+",
-    url: "https://arxiv.org/abs/2103.13415",
-    contribution:
-      "Replaced infinitesimal rays with conical frustums and integrated positional encodings to reduce NeRF aliasing."
-  },
-  {
-    id: "plenoctrees",
-    title: "PlenOctrees for Real-time Rendering of Neural Radiance Fields",
-    year: 2021,
-    venue: "ICCV",
-    authors: ["Alex Yu", "Ruilong Li", "Matthew Tancik", "Hao Li", "Ren Ng", "Angjoo Kanazawa"],
-    area: "Real-time rendering",
-    citationBand: "600+",
-    url: "https://arxiv.org/abs/2103.14024",
-    contribution:
-      "Baked trained NeRFs into sparse octrees with spherical harmonics, enabling real-time rendering."
-  },
-  {
-    id: "kilonerf",
-    title: "KiloNeRF: Speeding up Neural Radiance Fields with Thousands of Tiny MLPs",
-    year: 2021,
-    venue: "ICCV",
-    authors: ["Christian Reiser", "Songyou Peng", "Yiyi Liao", "Andreas Geiger"],
-    area: "Real-time rendering",
-    citationBand: "300+",
-    url: "https://arxiv.org/abs/2103.13744",
-    contribution:
-      "Partitioned a scene into many small neural fields to accelerate NeRF inference while preserving neural representation."
-  },
-  {
-    id: "plenoxels",
-    title: "Plenoxels: Radiance Fields without Neural Networks",
-    year: 2022,
-    venue: "CVPR",
-    authors: ["Sara Fridovich-Keil", "Alex Yu", "Matthew Tancik", "Qinhong Chen", "Benjamin Recht", "Angjoo Kanazawa"],
-    area: "Explicit radiance fields",
-    citationBand: "800+",
-    url: "https://arxiv.org/abs/2112.05131",
-    contribution:
-      "Showed that sparse voxel grids with spherical harmonics can match NeRF-style quality without an MLP."
-  },
-  {
-    id: "instant-ngp",
-    title: "Instant Neural Graphics Primitives with a Multiresolution Hash Encoding",
-    year: 2022,
-    venue: "SIGGRAPH",
-    authors: ["Thomas Muller", "Alex Evans", "Christoph Schied", "Alexander Keller"],
-    area: "Acceleration",
-    citationBand: "3k+",
-    url: "https://arxiv.org/abs/2201.05989",
-    contribution:
-      "Used multiresolution hash grids and fused CUDA kernels to train high-quality neural graphics primitives in seconds."
-  },
-  {
-    id: "mip-nerf-360",
-    title: "Mip-NeRF 360: Unbounded Anti-Aliased Neural Radiance Fields",
-    year: 2022,
-    venue: "CVPR",
-    authors: ["Jonathan T. Barron", "Ben Mildenhall", "Dor Verbin", "Pratul P. Srinivasan", "Peter Hedman"],
-    area: "Unbounded scenes",
-    citationBand: "1k+",
-    url: "https://arxiv.org/abs/2111.12077",
-    contribution:
-      "Adapted mip-NeRF to full 360-degree unbounded captures with scene contraction and distortion regularization."
-  },
-  {
-    id: "tensorf",
-    title: "TensoRF: Tensorial Radiance Fields",
-    year: 2022,
-    venue: "ECCV",
-    authors: ["Anpei Chen", "Zexiang Xu", "Andreas Geiger", "Jingyi Yu", "Hao Su"],
-    area: "Compact explicit fields",
-    citationBand: "700+",
-    url: "https://arxiv.org/abs/2203.09517",
-    contribution:
-      "Factorized radiance fields into compact tensor components, improving reconstruction speed and memory efficiency."
-  },
-  {
-    id: "gaussian-splatting",
-    title: "3D Gaussian Splatting for Real-Time Radiance Field Rendering",
-    year: 2023,
-    venue: "SIGGRAPH",
-    authors: ["Bernhard Kerbl", "Georgios Kopanas", "Thomas Leimkuhler", "George Drettakis"],
-    area: "Explicit radiance fields",
-    citationBand: "4k+",
-    url: "https://arxiv.org/abs/2308.04079",
-    contribution:
-      "Replaced dense neural sampling with optimized anisotropic 3D Gaussians and a fast differentiable rasterizer."
-  }
-],
-
-edges: [
-  {
-    source: "light-field-rendering",
-    target: "nerf",
-    relation: "cited for image-based view synthesis and radiance/light-field foundations"
-  },
-  {
-    source: "lumigraph",
-    target: "nerf",
-    relation: "cited as a classical light-field view-synthesis baseline"
-  },
-  {
-    source: "photo-tourism",
-    target: "nerf-w",
-    relation: "cited for unordered tourist photo collections and internet-scale reconstruction"
-  },
-  {
-    source: "photo-tourism",
-    target: "mip-nerf-360",
-    relation: "cited as part of the lineage of real-world 360-degree scene capture"
-  },
-  {
-    source: "colmap",
-    target: "nerf",
-    relation: "cited for estimating camera poses from real captured images"
-  },
-  {
-    source: "colmap",
-    target: "nerf-w",
-    relation: "cited for registering unconstrained photo collections"
-  },
-  {
-    source: "colmap",
-    target: "mip-nerf-360",
-    relation: "cited for sparse reconstruction and camera calibration"
-  },
-  {
-    source: "colmap",
-    target: "gaussian-splatting",
-    relation: "cited for initializing scenes from SfM points and camera poses"
-  },
-  {
-    source: "occupancy-networks",
-    target: "nerf",
-    relation: "cited as a neural implicit 3D representation"
-  },
-  {
-    source: "deepsdf",
-    target: "nerf",
-    relation: "cited as a continuous implicit shape representation"
-  },
-  {
-    source: "srn",
-    target: "nerf",
-    relation: "cited for differentiable rendering of continuous neural scenes"
-  },
-  {
-    source: "neural-volumes",
-    target: "nerf",
-    relation: "cited for learned volumetric scene representations"
-  },
-  {
-    source: "fourier-features",
-    target: "mip-nerf",
-    relation: "cited for understanding positional encodings in coordinate MLPs"
-  },
-  {
-    source: "fourier-features",
-    target: "instant-ngp",
-    relation: "cited for high-frequency coordinate encodings"
-  },
-  {
-    source: "nerf",
-    target: "nerf-w",
-    relation: "extended to uncontrolled lighting, appearance, and transient objects"
-  },
-  {
-    source: "nerf",
-    target: "pixelnerf",
-    relation: "extended from per-scene optimization to feature-conditioned generalization"
-  },
-  {
-    source: "nerf",
-    target: "mip-nerf",
-    relation: "extended with multiscale sampling and integrated positional encoding"
-  },
-  {
-    source: "nerf",
-    target: "plenoctrees",
-    relation: "converted into an explicit octree representation for real-time rendering"
-  },
-  {
-    source: "nerf",
-    target: "kilonerf",
-    relation: "accelerated with many tiny spatially partitioned MLPs"
-  },
-  {
-    source: "nerf",
-    target: "plenoxels",
-    relation: "reinterpreted as optimization of an explicit radiance field"
-  },
-  {
-    source: "nerf",
-    target: "instant-ngp",
-    relation: "accelerated with hash-grid encodings and fully fused GPU kernels"
-  },
-  {
-    source: "nerf",
-    target: "mip-nerf-360",
-    relation: "extended to anti-aliased unbounded 360-degree captures"
-  },
-  {
-    source: "nerf",
-    target: "tensorf",
-    relation: "compressed into tensor-factorized explicit radiance fields"
-  },
-  {
-    source: "nerf",
-    target: "gaussian-splatting",
-    relation: "used as the core radiance-field problem setting and quality baseline"
-  },
-  {
-    source: "nerf-w",
-    target: "mip-nerf-360",
-    relation: "cited for real-world capture effects and appearance variation"
-  },
-  {
-    source: "mip-nerf",
-    target: "mip-nerf-360",
-    relation: "generalized to unbounded scenes and 360-degree trajectories"
-  },
-  {
-    source: "mip-nerf",
-    target: "gaussian-splatting",
-    relation: "cited as a high-quality anti-aliased NeRF baseline"
-  },
-  {
-    source: "plenoctrees",
-    target: "plenoxels",
-    relation: "cited for sparse explicit radiance-field rendering"
-  },
-  {
-    source: "plenoxels",
-    target: "gaussian-splatting",
-    relation: "cited for direct optimization of explicit radiance-field parameters"
-  },
-  {
-    source: "instant-ngp",
-    target: "tensorf",
-    relation: "cited as a fast neural graphics primitive baseline"
-  },
-  {
-    source: "instant-ngp",
-    target: "gaussian-splatting",
-    relation: "cited as a fast training and rendering baseline"
-  },
-  {
-    source: "mip-nerf-360",
-    target: "gaussian-splatting",
-    relation: "cited as a state-of-the-art unbounded-scene baseline"
-  },
-  {
-    source: "tensorf",
-    target: "gaussian-splatting",
-    relation: "cited as an efficient explicit radiance-field baseline"
-  }
-],
-
-sources: [
-  {
-    label: "NeRF arXiv",
-    url: "https://arxiv.org/abs/2003.08934"
-  },
-  {
-    label: "Mip-NeRF arXiv",
-    url: "https://arxiv.org/abs/2103.13415"
-  },
-  {
-    label: "PlenOctrees arXiv",
-    url: "https://arxiv.org/abs/2103.14024"
-  },
-  {
-    label: "Instant-NGP arXiv",
-    url: "https://arxiv.org/abs/2201.05989"
-  },
-  {
-    label: "3D Gaussian Splatting arXiv",
-    url: "https://arxiv.org/abs/2308.04079"
-  },
-  {
-    label: "Neural radiance field overview",
-    url: "https://en.wikipedia.org/wiki/Neural_radiance_field"
-  },
-  {
-    label: "Neural field overview",
-    url: "https://en.wikipedia.org/wiki/Neural_field"
-  }
-]
+  topics: [
+    {
+      id: "nerf",
+      label: "NeRF",
+      title: "NeRF and Neural Rendering",
+      years: "2019-2023",
+      summary:
+        "From continuous implicit fields to radiance fields, fast explicit grids, unbounded scenes, and Gaussian splatting.",
+      papers: [
+        {
+          id: "occnet",
+          title: "Occupancy Networks: Learning 3D Reconstruction in Function Space",
+          year: 2019,
+          venue: "CVPR",
+          authors: ["Lars Mescheder", "Michael Oechsle", "Michael Niemeyer", "Sebastian Nowozin", "Andreas Geiger"],
+          area: "Implicit geometry",
+          citationBand: "2k+",
+          url: "https://arxiv.org/abs/1812.03828",
+          contribution: "Made continuous neural occupancy fields a central representation for 3D reconstruction."
+        },
+        {
+          id: "deepsdf",
+          title: "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation",
+          year: 2019,
+          venue: "CVPR",
+          authors: ["Jeong Joon Park", "Peter Florence", "Julian Straub", "Richard Newcombe", "Steven Lovegrove"],
+          area: "Implicit geometry",
+          citationBand: "2k+",
+          url: "https://arxiv.org/abs/1901.05103",
+          contribution: "Popularized neural signed-distance functions as compact continuous shape priors."
+        },
+        {
+          id: "srn",
+          title: "Scene Representation Networks",
+          year: 2019,
+          venue: "NeurIPS",
+          authors: ["Vincent Sitzmann", "Michael Zollhofer", "Gordon Wetzstein"],
+          area: "Neural scene fields",
+          citationBand: "900+",
+          url: "https://arxiv.org/abs/1906.01618",
+          contribution: "Used continuous 3D neural scenes and differentiable ray marching for view synthesis."
+        },
+        {
+          id: "neural-volumes",
+          title: "Neural Volumes: Learning Dynamic Renderable Volumes from Images",
+          year: 2019,
+          venue: "SIGGRAPH",
+          authors: ["Stephen Lombardi", "Tomas Simon", "Jason Saragih", "Gabriel Schwartz", "Andreas Lehrmann", "Yaser Sheikh"],
+          area: "Neural rendering",
+          citationBand: "700+",
+          url: "https://arxiv.org/abs/1906.07751",
+          contribution: "Learned dynamic volumetric representations that could be rendered from novel viewpoints."
+        },
+        {
+          id: "nerf",
+          title: "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis",
+          year: 2020,
+          venue: "ECCV",
+          authors: ["Ben Mildenhall", "Pratul P. Srinivasan", "Matthew Tancik", "Jonathan T. Barron", "Ravi Ramamoorthi", "Ren Ng"],
+          area: "Radiance fields",
+          citationBand: "20k+",
+          url: "https://arxiv.org/abs/2003.08934",
+          contribution: "Defined a scene as a continuous density and radiance field optimized through volume rendering."
+        },
+        {
+          id: "fourier-features",
+          title: "Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains",
+          year: 2020,
+          venue: "NeurIPS",
+          authors: ["Matthew Tancik", "Pratul P. Srinivasan", "Ben Mildenhall", "Sara Fridovich-Keil", "Nithin Raghavan", "Utkarsh Singhal", "Ravi Ramamoorthi", "Jonathan T. Barron", "Ren Ng"],
+          area: "Coordinate networks",
+          citationBand: "2k+",
+          url: "https://arxiv.org/abs/2006.10739",
+          contribution: "Explained why positional/Fourier encodings let coordinate MLPs fit high-frequency signals."
+        },
+        {
+          id: "nerf-w",
+          title: "NeRF in the Wild: Neural Radiance Fields for Unconstrained Photo Collections",
+          year: 2021,
+          venue: "CVPR",
+          authors: ["Ricardo Martin-Brualla", "Noha Radwan", "Mehdi S. M. Sajjadi", "Jonathan T. Barron", "Alexey Dosovitskiy", "Daniel Duckworth"],
+          area: "Robust capture",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2008.02268",
+          contribution: "Handled tourist-photo appearance changes and transient occluders with learned embeddings."
+        },
+        {
+          id: "pixelnerf",
+          title: "pixelNeRF: Neural Radiance Fields from One or Few Images",
+          year: 2021,
+          venue: "CVPR",
+          authors: ["Alex Yu", "Vickie Ye", "Matthew Tancik", "Angjoo Kanazawa"],
+          area: "Generalization",
+          citationBand: "900+",
+          url: "https://arxiv.org/abs/2012.02190",
+          contribution: "Conditioned radiance fields on image features for few-view generalization."
+        },
+        {
+          id: "mip-nerf",
+          title: "Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields",
+          year: 2021,
+          venue: "ICCV",
+          authors: ["Jonathan T. Barron", "Ben Mildenhall", "Matthew Tancik", "Peter Hedman", "Ricardo Martin-Brualla", "Pratul P. Srinivasan"],
+          area: "Anti-aliasing",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2103.13415",
+          contribution: "Used conical frustums and integrated encodings to reduce aliasing in radiance fields."
+        },
+        {
+          id: "plenoctrees",
+          title: "PlenOctrees for Real-time Rendering of Neural Radiance Fields",
+          year: 2021,
+          venue: "ICCV",
+          authors: ["Alex Yu", "Ruilong Li", "Matthew Tancik", "Hao Li", "Ren Ng", "Angjoo Kanazawa"],
+          area: "Acceleration",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2103.14024",
+          contribution: "Baked trained NeRFs into sparse octrees for real-time rendering."
+        },
+        {
+          id: "kilonerf",
+          title: "KiloNeRF: Speeding up Neural Radiance Fields with Thousands of Tiny MLPs",
+          year: 2021,
+          venue: "ICCV",
+          authors: ["Christian Reiser", "Songyou Peng", "Yiyi Liao", "Andreas Geiger"],
+          area: "Acceleration",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2103.13744",
+          contribution: "Partitioned a scene into many small MLPs to make neural rendering faster."
+        },
+        {
+          id: "plenoxels",
+          title: "Plenoxels: Radiance Fields without Neural Networks",
+          year: 2022,
+          venue: "CVPR",
+          authors: ["Sara Fridovich-Keil", "Alex Yu", "Matthew Tancik", "Qinhong Chen", "Benjamin Recht", "Angjoo Kanazawa"],
+          area: "Explicit fields",
+          citationBand: "800+",
+          url: "https://arxiv.org/abs/2112.05131",
+          contribution: "Showed that sparse voxel grids can optimize radiance fields without an MLP."
+        },
+        {
+          id: "instant-ngp",
+          title: "Instant Neural Graphics Primitives with a Multiresolution Hash Encoding",
+          year: 2022,
+          venue: "SIGGRAPH",
+          authors: ["Thomas Muller", "Alex Evans", "Christoph Schied", "Alexander Keller"],
+          area: "Acceleration",
+          citationBand: "3k+",
+          url: "https://arxiv.org/abs/2201.05989",
+          contribution: "Used multiresolution hash grids and fused kernels for very fast neural graphics training."
+        },
+        {
+          id: "mip-nerf-360",
+          title: "Mip-NeRF 360: Unbounded Anti-Aliased Neural Radiance Fields",
+          year: 2022,
+          venue: "CVPR",
+          authors: ["Jonathan T. Barron", "Ben Mildenhall", "Dor Verbin", "Pratul P. Srinivasan", "Peter Hedman"],
+          area: "Unbounded scenes",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2111.12077",
+          contribution: "Extended anti-aliased NeRFs to unbounded 360-degree captures."
+        },
+        {
+          id: "tensorf",
+          title: "TensoRF: Tensorial Radiance Fields",
+          year: 2022,
+          venue: "ECCV",
+          authors: ["Anpei Chen", "Zexiang Xu", "Andreas Geiger", "Jingyi Yu", "Hao Su"],
+          area: "Explicit fields",
+          citationBand: "700+",
+          url: "https://arxiv.org/abs/2203.09517",
+          contribution: "Compressed radiance fields with tensor factorization for fast reconstruction."
+        },
+        {
+          id: "dvgo",
+          title: "Direct Voxel Grid Optimization: Super-fast Convergence for Radiance Fields Reconstruction",
+          year: 2022,
+          venue: "CVPR",
+          authors: ["Cheng Sun", "Min Sun", "Hwann-Tzong Chen"],
+          area: "Explicit fields",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2111.11215",
+          contribution: "Optimized explicit voxel-grid radiance fields directly for fast convergence."
+        },
+        {
+          id: "zipnerf",
+          title: "Zip-NeRF: Anti-Aliased Grid-Based Neural Radiance Fields",
+          year: 2023,
+          venue: "ICCV",
+          authors: ["Jonathan T. Barron", "Ben Mildenhall", "Dor Verbin", "Pratul P. Srinivasan", "Peter Hedman"],
+          area: "Anti-aliasing",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2304.06706",
+          contribution: "Combined anti-aliasing with grid-based acceleration for high-quality radiance fields."
+        },
+        {
+          id: "gaussian-splatting",
+          title: "3D Gaussian Splatting for Real-Time Radiance Field Rendering",
+          year: 2023,
+          venue: "SIGGRAPH",
+          authors: ["Bernhard Kerbl", "Georgios Kopanas", "Thomas Leimkuhler", "George Drettakis"],
+          area: "Explicit fields",
+          citationBand: "4k+",
+          url: "https://arxiv.org/abs/2308.04079",
+          contribution: "Used optimized anisotropic Gaussians and differentiable rasterization for real-time rendering."
+        }
+      ],
+      edges: [
+        ["occnet", "nerf", "implicit continuous fields"],
+        ["deepsdf", "nerf", "implicit coordinate representation"],
+        ["srn", "nerf", "continuous neural scene rendering"],
+        ["neural-volumes", "nerf", "learned volumetric rendering"],
+        ["nerf", "fourier-features", "coordinate encodings analyzed"],
+        ["fourier-features", "mip-nerf", "integrated positional encoding lineage"],
+        ["nerf", "nerf-w", "unconstrained captures"],
+        ["nerf", "pixelnerf", "few-view generalization"],
+        ["nerf", "mip-nerf", "anti-aliasing"],
+        ["nerf", "plenoctrees", "real-time baking"],
+        ["nerf", "kilonerf", "inference acceleration"],
+        ["nerf", "plenoxels", "explicit optimization"],
+        ["plenoctrees", "plenoxels", "sparse explicit rendering"],
+        ["nerf", "instant-ngp", "fast encoding and kernels"],
+        ["nerf", "mip-nerf-360", "unbounded scenes"],
+        ["mip-nerf", "mip-nerf-360", "anti-aliased 360 scenes"],
+        ["instant-ngp", "tensorf", "fast explicit baseline"],
+        ["nerf", "tensorf", "factorized radiance fields"],
+        ["nerf", "dvgo", "direct explicit grids"],
+        ["plenoxels", "gaussian-splatting", "explicit parameter optimization"],
+        ["instant-ngp", "gaussian-splatting", "real-time baseline"],
+        ["mip-nerf-360", "zipnerf", "unbounded anti-aliasing"],
+        ["zipnerf", "gaussian-splatting", "high-quality baseline"],
+        ["tensorf", "gaussian-splatting", "efficient explicit baseline"],
+        ["dvgo", "gaussian-splatting", "fast explicit reconstruction"]
+      ]
+    },
+    {
+      id: "video-diffusion",
+      label: "Video Diffusion",
+      title: "Video Diffusion Models",
+      years: "2019-2024",
+      summary:
+        "Diffusion foundations, temporal denoising, text-to-video scaling, latent video models, and controllable animation.",
+      papers: [
+        {
+          id: "ncsn",
+          title: "Generative Modeling by Estimating Gradients of the Data Distribution",
+          year: 2019,
+          venue: "NeurIPS",
+          authors: ["Yang Song", "Stefano Ermon"],
+          area: "Diffusion foundations",
+          citationBand: "5k+",
+          url: "https://arxiv.org/abs/1907.05600",
+          contribution: "Established score-based generative modeling with noise-conditioned score networks."
+        },
+        {
+          id: "ddpm",
+          title: "Denoising Diffusion Probabilistic Models",
+          year: 2020,
+          venue: "NeurIPS",
+          authors: ["Jonathan Ho", "Ajay Jain", "Pieter Abbeel"],
+          area: "Diffusion foundations",
+          citationBand: "20k+",
+          url: "https://arxiv.org/abs/2006.11239",
+          contribution: "Made denoising diffusion models a practical high-quality generative framework."
+        },
+        {
+          id: "score-sde",
+          title: "Score-Based Generative Modeling through Stochastic Differential Equations",
+          year: 2021,
+          venue: "ICLR",
+          authors: ["Yang Song", "Jascha Sohl-Dickstein", "Diederik P. Kingma", "Abhishek Kumar", "Stefano Ermon", "Ben Poole"],
+          area: "Diffusion foundations",
+          citationBand: "5k+",
+          url: "https://arxiv.org/abs/2011.13456",
+          contribution: "Unified score models and diffusion sampling through SDEs and predictor-corrector methods."
+        },
+        {
+          id: "cfg",
+          title: "Classifier-Free Diffusion Guidance",
+          year: 2021,
+          venue: "NeurIPS Workshop",
+          authors: ["Jonathan Ho", "Tim Salimans"],
+          area: "Conditioning",
+          citationBand: "3k+",
+          url: "https://arxiv.org/abs/2207.12598",
+          contribution: "Introduced classifier-free guidance, now central to text-conditioned image and video generation."
+        },
+        {
+          id: "video-diffusion-models",
+          title: "Video Diffusion Models",
+          year: 2022,
+          venue: "NeurIPS",
+          authors: ["Jonathan Ho", "Tim Salimans", "Alexey Gritsenko", "William Chan", "Mohammad Norouzi", "David J. Fleet"],
+          area: "Video denoising",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2204.03458",
+          contribution: "Adapted diffusion models to video with temporal architectures and video super-resolution."
+        },
+        {
+          id: "mcvd",
+          title: "Masked Conditional Video Diffusion for Prediction, Generation, and Interpolation",
+          year: 2022,
+          venue: "NeurIPS",
+          authors: ["Raoul Villegas", "Mohammad Babaeizadeh", "Pieter-Jan Kindermans", "Hernan Moraldo", "Han Zhang", "Mohammad Taghi Saffar", "Santiago Castro", "Julius Kunze", "Dumitru Erhan"],
+          area: "Video denoising",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2205.09853",
+          contribution: "Used masking to support video prediction, unconditional generation, and interpolation."
+        },
+        {
+          id: "make-a-video",
+          title: "Make-A-Video: Text-to-Video Generation without Text-Video Data",
+          year: 2022,
+          venue: "arXiv",
+          authors: ["Uriel Singer", "Adam Polyak", "Thomas Hayes", "Xiaoyue Yin", "Jie An", "Songyang Zhang", "Qiyuan Hu", "Harry Yang", "Oron Ashual", "Oran Gafni", "Devi Parikh", "Sonali Parikh", "Yaniv Taigman"],
+          area: "Text-to-video",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2209.14792",
+          contribution: "Transferred text-image priors to video generation while learning motion from unlabeled video."
+        },
+        {
+          id: "imagen-video",
+          title: "Imagen Video: High Definition Video Generation with Diffusion Models",
+          year: 2022,
+          venue: "arXiv",
+          authors: ["Jonathan Ho", "William Chan", "Chitwan Saharia", "Jay Whang", "Ruiqi Gao", "Alexey Gritsenko", "Diederik P. Kingma", "Ben Poole", "Mohammad Norouzi", "David J. Fleet", "Tim Salimans"],
+          area: "Text-to-video",
+          citationBand: "900+",
+          url: "https://arxiv.org/abs/2210.02303",
+          contribution: "Scaled text-to-video with cascaded spatial and temporal super-resolution diffusion models."
+        },
+        {
+          id: "phenaki",
+          title: "Phenaki: Variable Length Video Generation From Open Domain Textual Description",
+          year: 2022,
+          venue: "ICLR",
+          authors: ["Ruben Villegas", "Mohammad Babaeizadeh", "Pieter-Jan Kindermans", "Hernan Moraldo", "Han Zhang", "Mohammad Taghi Saffar", "Santiago Castro", "Julius Kunze", "Dumitru Erhan"],
+          area: "Long video",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2210.02399",
+          contribution: "Generated variable-length videos from sequences of text prompts using compact video tokens."
+        },
+        {
+          id: "tune-a-video",
+          title: "Tune-A-Video: One-Shot Tuning of Image Diffusion Models for Text-to-Video Generation",
+          year: 2023,
+          venue: "ICCV",
+          authors: ["Jay Zhangjie Wu", "Yixiao Ge", "Xintao Wang", "Wynne Hsu", "Ying Shan", "Xiaohu Qie", "Mike Zheng Shou"],
+          area: "Personalization",
+          citationBand: "700+",
+          url: "https://arxiv.org/abs/2212.11565",
+          contribution: "Fine-tuned image diffusion models on a single video for controllable text-driven editing."
+        },
+        {
+          id: "text2video-zero",
+          title: "Text2Video-Zero: Text-to-Image Diffusion Models are Zero-Shot Video Generators",
+          year: 2023,
+          venue: "ICCV",
+          authors: ["Picsart AI Research", "UT Austin"],
+          area: "Zero-shot video",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2303.13439",
+          contribution: "Turned text-to-image diffusion into zero-shot video generation with motion dynamics and attention."
+        },
+        {
+          id: "video-ldm",
+          title: "Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models",
+          year: 2023,
+          venue: "CVPR",
+          authors: ["Andreas Blattmann", "Robin Rombach", "Huan Ling", "Tim Dockhorn", "Seung Wook Kim", "Sanjay Fidler", "Karsten Kreis"],
+          area: "Latent video",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2304.08818",
+          contribution: "Extended latent diffusion with temporal layers for high-resolution video synthesis."
+        },
+        {
+          id: "modelscope",
+          title: "ModelScope Text-to-Video Technical Report",
+          year: 2023,
+          venue: "arXiv",
+          authors: ["ModelScope Contributors"],
+          area: "Text-to-video",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2308.06571",
+          contribution: "Released an open text-to-video diffusion system and dataset/model recipe."
+        },
+        {
+          id: "animatediff",
+          title: "AnimateDiff: Animate Your Personalized Text-to-Image Diffusion Models without Specific Tuning",
+          year: 2023,
+          venue: "ICLR",
+          authors: ["Yuwei Guo", "Ceyuan Yang", "Anyi Rao", "Yaohui Wang", "Yu Qiao", "Dahua Lin", "Bo Dai"],
+          area: "Motion adapters",
+          citationBand: "800+",
+          url: "https://arxiv.org/abs/2307.04725",
+          contribution: "Added reusable motion modules to animate personalized text-to-image models."
+        },
+        {
+          id: "stable-video-diffusion",
+          title: "Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets",
+          year: 2023,
+          venue: "arXiv",
+          authors: ["Andreas Blattmann", "Tim Dockhorn", "Sumith Kulal", "Daniel Mendelevitch", "Maciej Kilian", "Dominik Lorenz", "Yam Levi", "Zion English", "Vikram Voleti", "Adam Letts", "Varun Jampani", "Robin Rombach"],
+          area: "Latent video",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2311.15127",
+          contribution: "Scaled latent video diffusion training and released a strong image-to-video model."
+        },
+        {
+          id: "videopoet",
+          title: "VideoPoet: A Large Language Model for Zero-Shot Video Generation",
+          year: 2023,
+          venue: "arXiv",
+          authors: ["Dan Kondratyuk", "Lijun Yu", "Xiuye Gu", "Jose Lezama", "Jonathan Huang", "Grant Schindler", "Rachel Hornung", "Vighnesh Birodkar", "Jimmy Yan", "Ming-Hsuan Yang", "Hartwig Adam"],
+          area: "Multimodal generation",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2312.14125",
+          contribution: "Modeled video, image, audio, and text tokens in a unified autoregressive generation system."
+        },
+        {
+          id: "lumiere",
+          title: "Lumiere: A Space-Time Diffusion Model for Video Generation",
+          year: 2024,
+          venue: "arXiv",
+          authors: ["Omer Bar-Tal", "Hila Chefer", "Omer Tov", "Charles Herrmann", "Roni Paiss", "Shiran Zada", "Amit H. Bermano", "Yossi Tzur", "Yael Pritch", "Inbar Mosseri"],
+          area: "Space-time models",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2401.12945",
+          contribution: "Generated full temporal duration in one pass with a space-time U-Net."
+        }
+      ],
+      edges: [
+        ["ncsn", "score-sde", "score model formalism"],
+        ["ddpm", "video-diffusion-models", "denoising diffusion adapted to video"],
+        ["score-sde", "video-diffusion-models", "continuous-time sampling lineage"],
+        ["cfg", "imagen-video", "text conditioning guidance"],
+        ["cfg", "make-a-video", "text conditioning guidance"],
+        ["video-diffusion-models", "imagen-video", "video super-resolution cascade"],
+        ["video-diffusion-models", "mcvd", "video denoising backbone"],
+        ["video-diffusion-models", "make-a-video", "temporal diffusion baseline"],
+        ["video-diffusion-models", "phenaki", "video generation baseline"],
+        ["ddpm", "text2video-zero", "image diffusion reused for video"],
+        ["make-a-video", "text2video-zero", "text-to-video benchmark lineage"],
+        ["imagen-video", "video-ldm", "high-resolution text-to-video baseline"],
+        ["phenaki", "videopoet", "long/multimodal video generation"],
+        ["video-ldm", "stable-video-diffusion", "latent video scaling"],
+        ["video-ldm", "animatediff", "latent text-to-image backbone"],
+        ["tune-a-video", "animatediff", "personalized animation comparison"],
+        ["text2video-zero", "animatediff", "image model adaptation"],
+        ["video-ldm", "modelscope", "latent text-to-video architecture"],
+        ["modelscope", "animatediff", "open text-to-video baseline"],
+        ["stable-video-diffusion", "lumiere", "large-scale latent video baseline"],
+        ["imagen-video", "lumiere", "high-quality diffusion video baseline"],
+        ["video-ldm", "lumiere", "space-time architecture comparison"],
+        ["stable-video-diffusion", "videopoet", "large-scale video generation baseline"]
+      ]
+    },
+    {
+      id: "inverse-diffusion",
+      label: "Diffusion Inverse Problems",
+      title: "Inverse Problems with Diffusion Models",
+      years: "2019-2024",
+      summary:
+        "Score priors, posterior sampling, projection-free restoration, null-space guidance, plug-and-play solvers, and blind inverse problems.",
+      papers: [
+        {
+          id: "ncsn",
+          title: "Generative Modeling by Estimating Gradients of the Data Distribution",
+          year: 2019,
+          venue: "NeurIPS",
+          authors: ["Yang Song", "Stefano Ermon"],
+          area: "Score priors",
+          citationBand: "5k+",
+          url: "https://arxiv.org/abs/1907.05600",
+          contribution: "Established learned score priors that can be paired with measurement likelihoods."
+        },
+        {
+          id: "ddpm",
+          title: "Denoising Diffusion Probabilistic Models",
+          year: 2020,
+          venue: "NeurIPS",
+          authors: ["Jonathan Ho", "Ajay Jain", "Pieter Abbeel"],
+          area: "Diffusion priors",
+          citationBand: "20k+",
+          url: "https://arxiv.org/abs/2006.11239",
+          contribution: "Provided the denoising diffusion prior used by many restoration and inverse-problem solvers."
+        },
+        {
+          id: "score-sde",
+          title: "Score-Based Generative Modeling through Stochastic Differential Equations",
+          year: 2021,
+          venue: "ICLR",
+          authors: ["Yang Song", "Jascha Sohl-Dickstein", "Diederik P. Kingma", "Abhishek Kumar", "Stefano Ermon", "Ben Poole"],
+          area: "Score priors",
+          citationBand: "5k+",
+          url: "https://arxiv.org/abs/2011.13456",
+          contribution: "Gave SDE samplers and likelihood-aware score machinery used in inverse solvers."
+        },
+        {
+          id: "score-ip",
+          title: "Solving Inverse Problems in Medical Imaging with Score-Based Generative Models",
+          year: 2021,
+          venue: "ICLR Workshop",
+          authors: ["Hyungjin Chung", "Jong Chul Ye"],
+          area: "Medical imaging",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2111.08005",
+          contribution: "Applied score-based priors to medical inverse problems with measurement consistency."
+        },
+        {
+          id: "ilvr",
+          title: "ILVR: Conditioning Method for Denoising Diffusion Probabilistic Models",
+          year: 2021,
+          venue: "ICCV",
+          authors: ["Gihyun Choi", "Jong Chul Ye"],
+          area: "Conditioning",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2108.02938",
+          contribution: "Conditioned diffusion sampling by replacing low-frequency components from a reference signal."
+        },
+        {
+          id: "repaint",
+          title: "RePaint: Inpainting using Denoising Diffusion Probabilistic Models",
+          year: 2022,
+          venue: "CVPR",
+          authors: ["Andreas Lugmayr", "Martin Danelljan", "Andres Romero", "Fisher Yu", "Radu Timofte", "Luc Van Gool"],
+          area: "Inpainting",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2201.09865",
+          contribution: "Used repeated resampling and known-pixel conditioning for diffusion image inpainting."
+        },
+        {
+          id: "palette",
+          title: "Palette: Image-to-Image Diffusion Models",
+          year: 2022,
+          venue: "SIGGRAPH",
+          authors: ["Chitwan Saharia", "William Chan", "Saurabh Saxena", "Lala Li", "Jay Whang", "Emily Denton", "Kamyar Ghasemipour", "Rapha Gontijo Lopes", "Burcu Karagol Ayan", "Tim Salimans", "Jonathan Ho", "David J. Fleet", "Mohammad Norouzi"],
+          area: "Image-to-image",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2111.05826",
+          contribution: "Framed restoration and translation tasks as conditional diffusion image-to-image generation."
+        },
+        {
+          id: "sde-inverse",
+          title: "Solving Linear Inverse Problems Using the Prior Implicit in a Denoiser",
+          year: 2022,
+          venue: "NeurIPS",
+          authors: ["Bahjat Kawar", "Michael Elad", "Stefano Ermon", "Jiaming Song"],
+          area: "Denoiser priors",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2211.17158",
+          contribution: "Connected denoiser priors and diffusion-style restoration for linear inverse problems."
+        },
+        {
+          id: "ddrm",
+          title: "Denoising Diffusion Restoration Models",
+          year: 2022,
+          venue: "NeurIPS",
+          authors: ["Bahjat Kawar", "Michael Elad", "Stefano Ermon", "Jiaming Song"],
+          area: "Linear inverse problems",
+          citationBand: "800+",
+          url: "https://arxiv.org/abs/2201.11793",
+          contribution: "Solved linear inverse problems by adapting pretrained diffusion sampling in spectral space."
+        },
+        {
+          id: "dps",
+          title: "Diffusion Posterior Sampling for General Noisy Inverse Problems",
+          year: 2022,
+          venue: "ICLR",
+          authors: ["Hyungjin Chung", "Jeongsol Kim", "Michael T. McCann", "Marc L. Klasky", "Jong Chul Ye"],
+          area: "Posterior sampling",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2209.14687",
+          contribution: "Approximated posterior sampling for noisy linear and nonlinear inverse problems."
+        },
+        {
+          id: "mcg",
+          title: "Improving Diffusion Models for Inverse Problems using Manifold Constraints",
+          year: 2022,
+          venue: "NeurIPS",
+          authors: ["Hyungjin Chung", "Byeongsu Sim", "Jong Chul Ye"],
+          area: "Posterior sampling",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2206.00941",
+          contribution: "Added manifold-constrained gradients to guide diffusion sampling toward measurements."
+        },
+        {
+          id: "ddnm",
+          title: "Zero-Shot Image Restoration Using Denoising Diffusion Null-Space Model",
+          year: 2023,
+          venue: "ICLR",
+          authors: ["Yutong Wang", "Jiangshan Zhang", "Yang Song", "Ming-Hsuan Yang"],
+          area: "Null-space guidance",
+          citationBand: "700+",
+          url: "https://arxiv.org/abs/2212.00490",
+          contribution: "Used range/null-space decomposition for zero-shot restoration with diffusion priors."
+        },
+        {
+          id: "pigdm",
+          title: "Pseudoinverse-Guided Diffusion Models for Inverse Problems",
+          year: 2023,
+          venue: "ICLR",
+          authors: ["Ben Fei", "Zhengyang Geng", "Tiancheng Zhao", "Xiaojie Guo", "Mike Zheng Shou"],
+          area: "Linear inverse problems",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2302.02088",
+          contribution: "Guided diffusion sampling with pseudoinverse measurement projections."
+        },
+        {
+          id: "diffpir",
+          title: "DiffPIR: Diffusion Prior for Image Restoration",
+          year: 2023,
+          venue: "ICCV",
+          authors: ["Yuanzhi Zhu", "Kai Zhang", "Jingyun Liang", "Jiezhang Cao", "Bihan Wen", "Radu Timofte", "Luc Van Gool"],
+          area: "Plug-and-play",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2303.02143",
+          contribution: "Used diffusion models as plug-and-play priors for general image restoration."
+        },
+        {
+          id: "red-diff",
+          title: "RED-Diff: Diffusion Prior for Image Restoration",
+          year: 2023,
+          venue: "NeurIPS Workshop",
+          authors: ["Gabriele Scalia", "Yilun Xu", "Stefano Ermon"],
+          area: "Plug-and-play",
+          citationBand: "100+",
+          url: "https://arxiv.org/abs/2307.12008",
+          contribution: "Combined regularization by denoising ideas with diffusion priors for restoration."
+        },
+        {
+          id: "blinddps",
+          title: "BlindDPS: Blind Diffusion Posterior Sampling for Blind Image Restoration",
+          year: 2023,
+          venue: "NeurIPS",
+          authors: ["Hyungjin Chung", "Jeongsol Kim", "Sehui Kim", "Jong Chul Ye"],
+          area: "Blind restoration",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2212.07975",
+          contribution: "Extended posterior sampling to jointly estimate unknown degradations and clean images."
+        },
+        {
+          id: "dmplug",
+          title: "DMPlug: A Plug-in Method for Solving Inverse Problems with Diffusion Models",
+          year: 2024,
+          venue: "CVPR",
+          authors: ["Yutong Wang", "Jiangshan Zhang", "Yang Song", "Ming-Hsuan Yang"],
+          area: "Plug-and-play",
+          citationBand: "100+",
+          url: "https://arxiv.org/abs/2405.16749",
+          contribution: "Packaged diffusion-model priors as modular plug-ins for inverse-problem solvers."
+        }
+      ],
+      edges: [
+        ["ncsn", "score-sde", "score/SDE foundation"],
+        ["ddpm", "repaint", "pretrained DDPM prior"],
+        ["ddpm", "palette", "conditional image-to-image diffusion"],
+        ["score-sde", "score-ip", "medical inverse score prior"],
+        ["score-sde", "dps", "posterior score approximation"],
+        ["score-sde", "mcg", "manifold-constrained score sampling"],
+        ["score-ip", "dps", "inverse-problem score guidance"],
+        ["ilvr", "ddnm", "measurement-consistent conditioning"],
+        ["palette", "diffpir", "restoration benchmark lineage"],
+        ["ddrm", "ddnm", "linear inverse restoration"],
+        ["ddrm", "pigdm", "pseudoinverse projection baseline"],
+        ["ddrm", "dps", "diffusion restoration baseline"],
+        ["mcg", "dps", "posterior sampling comparison"],
+        ["dps", "blinddps", "blind degradation extension"],
+        ["dps", "diffpir", "general inverse-problem baseline"],
+        ["dps", "red-diff", "posterior/prior comparison"],
+        ["dps", "dmplug", "modular posterior guidance baseline"],
+        ["ddnm", "dmplug", "zero-shot restoration baseline"],
+        ["pigdm", "dmplug", "linear projection guidance baseline"],
+        ["diffpir", "dmplug", "plug-and-play diffusion prior"],
+        ["red-diff", "dmplug", "diffusion prior restoration"]
+      ]
+    }
+  ]
 };

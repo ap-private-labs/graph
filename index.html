@@ -3,73 +3,44 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A citation-based knowledge graph of influential NeRF and neural rendering papers.">
-    <title>NeRF Citation Graph</title>
+    <meta name="description" content="Tabbed citation knowledge graphs for influential AI research areas.">
+    <title>AI Works Knowledge Graph</title>
     <link rel="stylesheet" href="assets/styles.css">
   </head>
   <body>
     <header class="topbar">
       <div>
-        <p class="eyebrow">AI Papers Knowledge Graph</p>
-        <h1>NeRF and Neural Rendering</h1>
+        <p class="eyebrow">AI Works Knowledge Graph</p>
+        <h1>Prominent AI Research Lineages</h1>
       </div>
-      <a class="repo-link" href="https://github.com/" aria-label="Open GitHub">GitHub</a>
+      <a class="repo-link" href="https://github.com/ap-private-labs/graph">GitHub</a>
     </header>
 
-    <main>
-      <section class="overview" aria-labelledby="overview-title">
-        <div class="overview-copy">
-          <h2 id="overview-title">A citation timeline from light fields to Gaussian splatting</h2>
-          <p>
-            Twenty influential papers, each above a 50-citation floor, connected by citation relationships from earlier work to later work.
-          </p>
+    <main class="app-shell">
+      <nav id="topic-tabs" class="topic-tabs" aria-label="Research topics"></nav>
+
+      <section class="graph-shell" aria-label="Knowledge graph">
+        <div class="graph-header">
+          <div>
+            <h2 id="graph-title"></h2>
+            <p id="graph-summary"></p>
+            <p id="graph-meta" class="graph-meta"></p>
+          </div>
+          <div class="zoom-controls" aria-label="Zoom controls">
+            <button id="zoom-out" type="button" aria-label="Zoom out">-</button>
+            <button id="zoom-reset" type="button">Reset</button>
+            <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+          </div>
         </div>
-        <dl class="stats" aria-label="Graph summary">
-          <div>
-            <dt id="paper-count">20</dt>
-            <dd>Papers</dd>
-          </div>
-          <div>
-            <dt id="edge-count">33</dt>
-            <dd>Citation links</dd>
-          </div>
-          <div>
-            <dt>1996-2023</dt>
-            <dd>Timeline</dd>
-          </div>
-        </dl>
-      </section>
 
-      <section class="workspace" aria-label="Knowledge graph explorer">
-        <aside class="filters" aria-label="Filters">
-          <div class="control-group">
-            <label for="search">Search</label>
-            <input id="search" type="search" placeholder="Paper, author, area">
-          </div>
-          <div class="control-group">
-            <span>Area</span>
-            <div id="area-filters" class="chip-row" role="group" aria-label="Area filters"></div>
-          </div>
-          <div class="legend" aria-label="Area legend" id="legend"></div>
-        </aside>
-
-        <section class="graph-panel" aria-label="Citation graph">
-          <svg id="graph" role="img" aria-labelledby="graph-title graph-desc"></svg>
-          <h2 id="graph-title" class="visually-hidden">Citation graph timeline</h2>
-          <p id="graph-desc" class="visually-hidden">Nodes are papers ordered by publication year. Arrows point from cited work to citing work.</p>
-        </section>
-
-        <aside class="details" aria-live="polite" aria-label="Selected paper">
-          <div id="paper-detail"></div>
-        </aside>
-      </section>
-
-      <section class="paper-list" aria-labelledby="papers-title">
-        <div class="section-heading">
-          <h2 id="papers-title">Papers</h2>
-          <p id="visible-count"></p>
+        <div class="graph-stage">
+          <svg id="graph" role="img" aria-label="Zoomable citation graph"></svg>
+          <aside class="detail-panel" aria-live="polite" aria-label="Selected paper">
+            <div id="paper-detail"></div>
+          </aside>
         </div>
-        <div id="papers" class="paper-grid"></div>
+
+        <div id="legend" class="legend" aria-label="Area legend"></div>
       </section>
     </main>
 
