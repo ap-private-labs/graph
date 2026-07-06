@@ -4,54 +4,10 @@ window.GRAPH_DATA = {
       id: "nerf",
       label: "NeRF",
       title: "NeRF and Neural Rendering",
-      years: "2019-2023",
+      years: "2020-2023",
       summary:
         "From continuous implicit fields to radiance fields, fast explicit grids, unbounded scenes, and Gaussian splatting.",
       papers: [
-        {
-          id: "occnet",
-          title: "Occupancy Networks: Learning 3D Reconstruction in Function Space",
-          year: 2019,
-          venue: "CVPR",
-          authors: ["Lars Mescheder", "Michael Oechsle", "Michael Niemeyer", "Sebastian Nowozin", "Andreas Geiger"],
-          area: "Implicit geometry",
-          citationBand: "2k+",
-          url: "https://arxiv.org/abs/1812.03828",
-          contribution: "Made continuous neural occupancy fields a central representation for 3D reconstruction."
-        },
-        {
-          id: "deepsdf",
-          title: "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation",
-          year: 2019,
-          venue: "CVPR",
-          authors: ["Jeong Joon Park", "Peter Florence", "Julian Straub", "Richard Newcombe", "Steven Lovegrove"],
-          area: "Implicit geometry",
-          citationBand: "2k+",
-          url: "https://arxiv.org/abs/1901.05103",
-          contribution: "Popularized neural signed-distance functions as compact continuous shape priors."
-        },
-        {
-          id: "srn",
-          title: "Scene Representation Networks",
-          year: 2019,
-          venue: "NeurIPS",
-          authors: ["Vincent Sitzmann", "Michael Zollhofer", "Gordon Wetzstein"],
-          area: "Neural scene fields",
-          citationBand: "900+",
-          url: "https://arxiv.org/abs/1906.01618",
-          contribution: "Used continuous 3D neural scenes and differentiable ray marching for view synthesis."
-        },
-        {
-          id: "neural-volumes",
-          title: "Neural Volumes: Learning Dynamic Renderable Volumes from Images",
-          year: 2019,
-          venue: "SIGGRAPH",
-          authors: ["Stephen Lombardi", "Tomas Simon", "Jason Saragih", "Gabriel Schwartz", "Andreas Lehrmann", "Yaser Sheikh"],
-          area: "Neural rendering",
-          citationBand: "700+",
-          url: "https://arxiv.org/abs/1906.07751",
-          contribution: "Learned dynamic volumetric representations that could be rendered from novel viewpoints."
-        },
         {
           id: "nerf",
           title: "NeRF: Representing Scenes as Neural Radiance Fields for View Synthesis",
@@ -130,6 +86,17 @@ window.GRAPH_DATA = {
           contribution: "Partitioned a scene into many small MLPs to make neural rendering faster."
         },
         {
+          id: "dnerf",
+          title: "D-NeRF: Neural Radiance Fields for Dynamic Scenes",
+          year: 2021,
+          venue: "CVPR",
+          authors: ["Albert Pumarola", "Enric Corona", "Gerard Pons-Moll", "Francesc Moreno-Noguer"],
+          area: "Dynamic scenes",
+          citationBand: "1k+",
+          url: "https://arxiv.org/abs/2011.13961",
+          contribution: "Extended NeRF to non-rigid dynamic scenes with a canonical field and learned deformation."
+        },
+        {
           id: "plenoxels",
           title: "Plenoxels: Radiance Fields without Neural Networks",
           year: 2022,
@@ -185,6 +152,28 @@ window.GRAPH_DATA = {
           contribution: "Optimized explicit voxel-grid radiance fields directly for fast convergence."
         },
         {
+          id: "regnerf",
+          title: "RegNeRF: Regularizing Neural Radiance Fields for View Synthesis from Sparse Inputs",
+          year: 2022,
+          venue: "CVPR",
+          authors: ["Michael Niemeyer", "Jonathan T. Barron", "Ben Mildenhall", "Mehdi S. M. Sajjadi", "Andreas Geiger", "Noha Radwan"],
+          area: "Sparse views",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2112.00724",
+          contribution: "Improved sparse-view NeRF reconstruction with geometric and appearance regularization."
+        },
+        {
+          id: "dreamfusion",
+          title: "DreamFusion: Text-to-3D using 2D Diffusion",
+          year: 2022,
+          venue: "ICLR",
+          authors: ["Ben Poole", "Ajay Jain", "Jonathan T. Barron", "Ben Mildenhall"],
+          area: "Text-to-3D",
+          citationBand: "2k+",
+          url: "https://arxiv.org/abs/2209.14988",
+          contribution: "Optimized a NeRF-like 3D representation using text-to-image diffusion model guidance."
+        },
+        {
           id: "zipnerf",
           title: "Zip-NeRF: Anti-Aliased Grid-Based Neural Radiance Fields",
           year: 2023,
@@ -205,13 +194,20 @@ window.GRAPH_DATA = {
           citationBand: "4k+",
           url: "https://arxiv.org/abs/2308.04079",
           contribution: "Used optimized anisotropic Gaussians and differentiable rasterization for real-time rendering."
+        },
+        {
+          id: "neuralangelo",
+          title: "Neuralangelo: High-Fidelity Neural Surface Reconstruction",
+          year: 2023,
+          venue: "CVPR",
+          authors: ["Zhaoshuo Li", "Thomas Muller", "Alex Evans", "Russell H. Taylor", "Mathias Unberath", "Ming-Yu Liu", "Chen-Hsuan Lin"],
+          area: "Surface reconstruction",
+          citationBand: "600+",
+          url: "https://arxiv.org/abs/2306.03092",
+          contribution: "Used neural graphics primitives and numerical gradients for detailed neural surface reconstruction."
         }
       ],
       edges: [
-        ["occnet", "nerf", "implicit continuous fields"],
-        ["deepsdf", "nerf", "implicit coordinate representation"],
-        ["srn", "nerf", "continuous neural scene rendering"],
-        ["neural-volumes", "nerf", "learned volumetric rendering"],
         ["nerf", "fourier-features", "coordinate encodings analyzed"],
         ["fourier-features", "mip-nerf", "integrated positional encoding lineage"],
         ["nerf", "nerf-w", "unconstrained captures"],
@@ -219,6 +215,7 @@ window.GRAPH_DATA = {
         ["nerf", "mip-nerf", "anti-aliasing"],
         ["nerf", "plenoctrees", "real-time baking"],
         ["nerf", "kilonerf", "inference acceleration"],
+        ["nerf", "dnerf", "dynamic scene extension"],
         ["nerf", "plenoxels", "explicit optimization"],
         ["plenoctrees", "plenoxels", "sparse explicit rendering"],
         ["nerf", "instant-ngp", "fast encoding and kernels"],
@@ -227,66 +224,27 @@ window.GRAPH_DATA = {
         ["instant-ngp", "tensorf", "fast explicit baseline"],
         ["nerf", "tensorf", "factorized radiance fields"],
         ["nerf", "dvgo", "direct explicit grids"],
+        ["nerf", "regnerf", "sparse-view regularization"],
+        ["pixelnerf", "regnerf", "few-view reconstruction lineage"],
+        ["nerf", "dreamfusion", "3D representation optimized by diffusion guidance"],
         ["plenoxels", "gaussian-splatting", "explicit parameter optimization"],
         ["instant-ngp", "gaussian-splatting", "real-time baseline"],
         ["mip-nerf-360", "zipnerf", "unbounded anti-aliasing"],
         ["zipnerf", "gaussian-splatting", "high-quality baseline"],
         ["tensorf", "gaussian-splatting", "efficient explicit baseline"],
-        ["dvgo", "gaussian-splatting", "fast explicit reconstruction"]
+        ["dvgo", "gaussian-splatting", "fast explicit reconstruction"],
+        ["instant-ngp", "neuralangelo", "multiresolution hash encoding for surfaces"],
+        ["nerf", "neuralangelo", "neural scene reconstruction lineage"]
       ]
     },
     {
       id: "video-diffusion",
       label: "Video Diffusion",
       title: "Video Diffusion Models",
-      years: "2019-2024",
+      years: "2022-2024",
       summary:
-        "Diffusion foundations, temporal denoising, text-to-video scaling, latent video models, and controllable animation.",
+        "Temporal denoising, text-to-video scaling, latent video models, controllable animation, and transformer-era video generators.",
       papers: [
-        {
-          id: "ncsn",
-          title: "Generative Modeling by Estimating Gradients of the Data Distribution",
-          year: 2019,
-          venue: "NeurIPS",
-          authors: ["Yang Song", "Stefano Ermon"],
-          area: "Diffusion foundations",
-          citationBand: "5k+",
-          url: "https://arxiv.org/abs/1907.05600",
-          contribution: "Established score-based generative modeling with noise-conditioned score networks."
-        },
-        {
-          id: "ddpm",
-          title: "Denoising Diffusion Probabilistic Models",
-          year: 2020,
-          venue: "NeurIPS",
-          authors: ["Jonathan Ho", "Ajay Jain", "Pieter Abbeel"],
-          area: "Diffusion foundations",
-          citationBand: "20k+",
-          url: "https://arxiv.org/abs/2006.11239",
-          contribution: "Made denoising diffusion models a practical high-quality generative framework."
-        },
-        {
-          id: "score-sde",
-          title: "Score-Based Generative Modeling through Stochastic Differential Equations",
-          year: 2021,
-          venue: "ICLR",
-          authors: ["Yang Song", "Jascha Sohl-Dickstein", "Diederik P. Kingma", "Abhishek Kumar", "Stefano Ermon", "Ben Poole"],
-          area: "Diffusion foundations",
-          citationBand: "5k+",
-          url: "https://arxiv.org/abs/2011.13456",
-          contribution: "Unified score models and diffusion sampling through SDEs and predictor-corrector methods."
-        },
-        {
-          id: "cfg",
-          title: "Classifier-Free Diffusion Guidance",
-          year: 2021,
-          venue: "NeurIPS Workshop",
-          authors: ["Jonathan Ho", "Tim Salimans"],
-          area: "Conditioning",
-          citationBand: "3k+",
-          url: "https://arxiv.org/abs/2207.12598",
-          contribution: "Introduced classifier-free guidance, now central to text-conditioned image and video generation."
-        },
         {
           id: "video-diffusion-models",
           title: "Video Diffusion Models",
@@ -387,6 +345,17 @@ window.GRAPH_DATA = {
           contribution: "Released an open text-to-video diffusion system and dataset/model recipe."
         },
         {
+          id: "videocomposer",
+          title: "VideoComposer: Compositional Video Synthesis with Motion Controllability",
+          year: 2023,
+          venue: "NeurIPS",
+          authors: ["Xiang Wang", "Hangjie Yuan", "Shiwei Zhang", "Dayou Chen", "Jiuniu Wang", "Yujun Shen", "Deli Zhao", "Jingren Zhou"],
+          area: "Controllable video",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2306.02018",
+          contribution: "Composed multiple control signals for text-to-video generation with explicit motion control."
+        },
+        {
           id: "animatediff",
           title: "AnimateDiff: Animate Your Personalized Text-to-Image Diffusion Models without Specific Tuning",
           year: 2023,
@@ -429,19 +398,46 @@ window.GRAPH_DATA = {
           citationBand: "300+",
           url: "https://arxiv.org/abs/2401.12945",
           contribution: "Generated full temporal duration in one pass with a space-time U-Net."
+        },
+        {
+          id: "videocrafter2",
+          title: "VideoCrafter2: Overcoming Data Limitations for High-Quality Video Diffusion Models",
+          year: 2024,
+          venue: "CVPR",
+          authors: ["Yingqing He", "Tianyu Yang", "Yubin Zhang", "Yong Zhang", "Hui Xue"],
+          area: "Open video models",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2401.09047",
+          contribution: "Improved open video diffusion training with better data and model design for high-quality generation."
+        },
+        {
+          id: "latte",
+          title: "Latte: Latent Diffusion Transformer for Video Generation",
+          year: 2024,
+          venue: "arXiv",
+          authors: ["Xin Ma", "Yaohui Wang", "Gengyun Jia", "Xinyuan Chen", "Ziwei Liu", "Ying Shan", "Yu Qiao"],
+          area: "Transformer video",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2401.03048",
+          contribution: "Brought diffusion transformers into latent video generation with scalable spatiotemporal attention."
+        },
+        {
+          id: "cogvideox",
+          title: "CogVideoX: Text-to-Video Diffusion Models with An Expert Transformer",
+          year: 2024,
+          venue: "arXiv",
+          authors: ["Zhuoyi Yang", "Jiayan Teng", "Wendi Zheng", "Ming Ding", "Shiyu Huang", "Jiazheng Xu", "Yuhong Yang", "Wenyi Hong", "Xiaohan Zhang", "Guanyu Feng", "Da Yin", "Xiaotao Gu", "Yuxuan Zhang", "Weihan Wang", "Jie Tang"],
+          area: "Transformer video",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2408.06072",
+          contribution: "Scaled text-to-video diffusion with expert transformer blocks and open model releases."
         }
       ],
       edges: [
-        ["ncsn", "score-sde", "score model formalism"],
-        ["ddpm", "video-diffusion-models", "denoising diffusion adapted to video"],
-        ["score-sde", "video-diffusion-models", "continuous-time sampling lineage"],
-        ["cfg", "imagen-video", "text conditioning guidance"],
-        ["cfg", "make-a-video", "text conditioning guidance"],
         ["video-diffusion-models", "imagen-video", "video super-resolution cascade"],
         ["video-diffusion-models", "mcvd", "video denoising backbone"],
         ["video-diffusion-models", "make-a-video", "temporal diffusion baseline"],
         ["video-diffusion-models", "phenaki", "video generation baseline"],
-        ["ddpm", "text2video-zero", "image diffusion reused for video"],
         ["make-a-video", "text2video-zero", "text-to-video benchmark lineage"],
         ["imagen-video", "video-ldm", "high-resolution text-to-video baseline"],
         ["phenaki", "videopoet", "long/multimodal video generation"],
@@ -451,10 +447,19 @@ window.GRAPH_DATA = {
         ["text2video-zero", "animatediff", "image model adaptation"],
         ["video-ldm", "modelscope", "latent text-to-video architecture"],
         ["modelscope", "animatediff", "open text-to-video baseline"],
+        ["modelscope", "videocomposer", "open controllable text-to-video baseline"],
+        ["video-ldm", "videocomposer", "latent video diffusion backbone"],
         ["stable-video-diffusion", "lumiere", "large-scale latent video baseline"],
         ["imagen-video", "lumiere", "high-quality diffusion video baseline"],
         ["video-ldm", "lumiere", "space-time architecture comparison"],
-        ["stable-video-diffusion", "videopoet", "large-scale video generation baseline"]
+        ["stable-video-diffusion", "videopoet", "large-scale video generation baseline"],
+        ["video-ldm", "videocrafter2", "latent video diffusion baseline"],
+        ["videocomposer", "videocrafter2", "open video generation baseline"],
+        ["stable-video-diffusion", "videocrafter2", "image-to-video scaling baseline"],
+        ["video-ldm", "latte", "latent video transformer comparison"],
+        ["lumiere", "latte", "spatiotemporal generation comparison"],
+        ["latte", "cogvideox", "video diffusion transformer lineage"],
+        ["videocrafter2", "cogvideox", "open high-quality video model baseline"]
       ]
     },
     {

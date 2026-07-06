@@ -65,9 +65,9 @@ function areaColors(topic) {
 }
 
 function layout(topic, width, height) {
-  const margin = { top: 82, right: 170, bottom: 92, left: 150 };
+  const margin = { top: 96, right: 220, bottom: 108, left: 190 };
   const years = topic.papers.map((paper) => paper.year);
-  const minYear = 2019;
+  const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
   const yearSpan = Math.max(1, maxYear - minYear);
   const grouped = new Map();
@@ -85,17 +85,17 @@ function layout(topic, width, height) {
   grouped.forEach((papersForYear, year) => {
     const x = margin.left + ((year - minYear) / yearSpan) * (width - margin.left - margin.right);
     const usable = height - margin.top - margin.bottom;
-    const columns = papersForYear.length > 4 ? 2 : 1;
+    const columns = papersForYear.length > 3 ? 2 : 1;
     const rows = Math.ceil(papersForYear.length / columns);
-    const step = Math.min(116, usable / Math.max(1, rows));
-    const laneGap = Math.min(92, Math.max(54, (width - margin.left - margin.right) / Math.max(8, yearSpan * 5)));
+    const step = Math.min(148, usable / Math.max(1, rows));
+    const laneGap = Math.min(148, Math.max(96, (width - margin.left - margin.right) / Math.max(6, yearSpan * 4)));
     const start = margin.top + usable / 2 - ((rows - 1) * step) / 2;
     papersForYear.forEach((paper, index) => {
       const row = Math.floor(index / columns);
       const column = index % columns;
       const laneOffset = columns === 1 ? 0 : column === 0 ? -laneGap : laneGap;
-      const stagger = row % 2 === 0 ? -14 : 14;
-      const labelSide = (column + row) % 2 === 0 ? "right" : "left";
+      const stagger = columns === 1 ? (row % 2 === 0 ? -18 : 18) : 0;
+      const labelSide = columns === 1 ? (row % 2 === 0 ? "right" : "left") : column === 0 ? "left" : "right";
       points.set(paper.id, {
         x: x + laneOffset + stagger,
         y: start + row * step,
@@ -120,13 +120,17 @@ function shortTitle(title) {
     ["Mip-NeRF:", "Mip-NeRF"],
     ["PlenOctrees", "PlenOctrees"],
     ["KiloNeRF", "KiloNeRF"],
+    ["D-NeRF", "D-NeRF"],
     ["Plenoxels", "Plenoxels"],
     ["Instant Neural Graphics", "Instant-NGP"],
     ["Mip-NeRF 360", "Mip-NeRF 360"],
     ["TensoRF", "TensoRF"],
     ["Direct Voxel", "DVGO"],
+    ["RegNeRF", "RegNeRF"],
+    ["DreamFusion", "DreamFusion"],
     ["Zip-NeRF", "Zip-NeRF"],
     ["3D Gaussian", "3D Gaussian Splatting"],
+    ["Neuralangelo", "Neuralangelo"],
     ["Generative Modeling by Estimating", "NCSN"],
     ["Denoising Diffusion Probabilistic", "DDPM"],
     ["Score-Based Generative", "Score SDE"],
@@ -140,10 +144,14 @@ function shortTitle(title) {
     ["Text2Video-Zero", "Text2Video-Zero"],
     ["Align your Latents", "Video LDM"],
     ["ModelScope", "ModelScope"],
+    ["VideoComposer", "VideoComposer"],
     ["AnimateDiff", "AnimateDiff"],
     ["Stable Video Diffusion", "SVD"],
     ["VideoPoet", "VideoPoet"],
     ["Lumiere", "Lumiere"],
+    ["VideoCrafter2", "VideoCrafter2"],
+    ["Latte", "Latte"],
+    ["CogVideoX", "CogVideoX"],
     ["Solving Inverse Problems in Medical Imaging", "Score-MRI"],
     ["ILVR", "ILVR"],
     ["RePaint", "RePaint"],
@@ -183,8 +191,8 @@ function updateViewportTransform() {
 function drawGraph() {
   const topic = activeTopic();
   const rect = graph.getBoundingClientRect();
-  const width = Math.max(1120, Math.round(rect.width || 1200));
-  const height = Math.max(720, Math.round(rect.height || 760));
+  const width = Math.max(2600, Math.round(rect.width || 1200));
+  const height = Math.max(1120, Math.round(rect.height || 1040));
   const { incoming, outgoing } = relationMaps(topic);
   const selectedRelations = new Set([
     ...incoming.get(selectedId).map((edge) => `${edge.source}->${edge.target}`),
@@ -286,7 +294,7 @@ function drawGraph() {
     }));
 
     const label = shortTitle(paper.title);
-    const labelWidth = Math.min(190, Math.max(62, label.length * 7.2 + 16));
+    const labelWidth = Math.min(158, Math.max(62, label.length * 6.7 + 16));
     const labelOnLeft = point.labelSide === "left";
     const labelX = labelOnLeft ? point.x - 22 : point.x + 22;
     const labelY = point.y + 4;

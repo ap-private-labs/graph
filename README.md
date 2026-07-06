@@ -7,7 +7,7 @@ The site is plain HTML, CSS, and JavaScript. It does not need a build step, so G
 ## Included Scope
 
 - Topic tabs for NeRF, video diffusion models, and inverse problems with diffusion models
-- Each topic starts at 2019 or later
+- NeRF starts at 2020, video diffusion starts at 2022, and inverse-problem diffusion starts at 2019
 - Each paper has a citation band above a 50-citation floor
 - Directed edges represent cited work leading into later citing work
 - Metadata includes title, authors, venue, year, area, citation band, contribution, and source URL
