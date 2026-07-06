@@ -167,7 +167,7 @@ function shortTitle(title) {
     ["BlindDPS", "BlindDPS"],
     ["DMPlug", "DMPlug"]
   ];
-  const match = aliases.find(([prefix]) => title.startsWith(prefix) || title.includes(prefix));
+  const match = aliases.find(([prefix]) => title.startsWith(prefix)) || aliases.find(([prefix]) => title.includes(prefix));
   return match ? match[1] : title.split(":")[0];
 }
 
