@@ -162,6 +162,13 @@ function edgeIsActive(edge) {
   return edge.source === selectedId || edge.target === selectedId;
 }
 
+function updateViewportTransform() {
+  const viewport = graph.querySelector("#viewport");
+  if (viewport) {
+    viewport.setAttribute("transform", `translate(${transform.x} ${transform.y}) scale(${transform.scale})`);
+  }
+}
+
 function drawGraph() {
   const topic = activeTopic();
   const rect = graph.getBoundingClientRect();
@@ -234,6 +241,9 @@ function drawGraph() {
       tabindex: "0",
       role: "button",
       "aria-label": paper.title
+    });
+    group.addEventListener("pointerdown", (event) => {
+      event.stopPropagation();
     });
     group.addEventListener("click", () => selectPaper(paper.id));
     group.addEventListener("keydown", (event) => {
@@ -371,7 +381,7 @@ function zoomAt(delta, centerX, centerY) {
   transform.x = centerX - (centerX - transform.x) * scaleRatio;
   transform.y = centerY - (centerY - transform.y) * scaleRatio;
   transform.scale = nextScale;
-  drawGraph();
+  updateViewportTransform();
 }
 
 graph.addEventListener("wheel", (event) => {
@@ -383,6 +393,9 @@ graph.addEventListener("wheel", (event) => {
 }, { passive: false });
 
 graph.addEventListener("pointerdown", (event) => {
+  if (event.button !== 0 || event.target.closest(".node-group")) {
+    return;
+  }
   isDragging = true;
   dragStart = { x: event.clientX, y: event.clientY };
   dragOrigin = { x: transform.x, y: transform.y };
@@ -394,12 +407,23 @@ graph.addEventListener("pointermove", (event) => {
   if (!isDragging) return;
   transform.x = dragOrigin.x + event.clientX - dragStart.x;
   transform.y = dragOrigin.y + event.clientY - dragStart.y;
-  drawGraph();
+  updateViewportTransform();
 });
 
 graph.addEventListener("pointerup", (event) => {
+  if (!isDragging) return;
   isDragging = false;
-  graph.releasePointerCapture(event.pointerId);
+  if (graph.hasPointerCapture(event.pointerId)) {
+    graph.releasePointerCapture(event.pointerId);
+  }
+  graph.classList.remove("dragging");
+});
+
+graph.addEventListener("pointercancel", (event) => {
+  isDragging = false;
+  if (graph.hasPointerCapture(event.pointerId)) {
+    graph.releasePointerCapture(event.pointerId);
+  }
   graph.classList.remove("dragging");
 });
 
