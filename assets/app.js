@@ -65,7 +65,7 @@ function areaColors(topic) {
 }
 
 function layout(topic, width, height) {
-  const margin = { top: 84, right: 170, bottom: 92, left: 150 };
+  const margin = { top: 74, right: 140, bottom: 82, left: 125 };
   const years = topic.papers.map((paper) => paper.year);
   const minYear = Math.min(...years);
   const maxYear = Math.max(...years);
@@ -87,14 +87,14 @@ function layout(topic, width, height) {
     const usable = height - margin.top - margin.bottom;
     const columns = papersForYear.length > 3 ? 2 : 1;
     const rows = Math.ceil(papersForYear.length / columns);
-    const step = Math.min(118, usable / Math.max(1, rows));
-    const laneGap = Math.min(108, Math.max(68, (width - margin.left - margin.right) / Math.max(9, yearSpan * 6)));
+    const step = Math.min(96, usable / Math.max(1, rows));
+    const laneGap = Math.min(84, Math.max(56, (width - margin.left - margin.right) / Math.max(10, yearSpan * 7)));
     const start = margin.top + usable / 2 - ((rows - 1) * step) / 2;
     papersForYear.forEach((paper, index) => {
       const row = Math.floor(index / columns);
       const column = index % columns;
       const laneOffset = columns === 1 ? 0 : column === 0 ? -laneGap : laneGap;
-      const stagger = columns === 1 ? (row % 2 === 0 ? -12 : 12) : 0;
+      const stagger = columns === 1 ? (row % 2 === 0 ? -8 : 8) : 0;
       const labelSide = columns === 1 ? (row % 2 === 0 ? "right" : "left") : column === 0 ? "left" : "right";
       points.set(paper.id, {
         x: x + laneOffset + stagger,
@@ -118,8 +118,6 @@ function shortTitle(title) {
     ["NeRF in the Wild", "NeRF-W"],
     ["pixelNeRF", "pixelNeRF"],
     ["Mip-NeRF:", "Mip-NeRF"],
-    ["PlenOctrees", "PlenOctrees"],
-    ["KiloNeRF", "KiloNeRF"],
     ["D-NeRF", "D-NeRF"],
     ["Plenoxels", "Plenoxels"],
     ["Instant Neural Graphics", "Instant-NGP"],
@@ -131,6 +129,10 @@ function shortTitle(title) {
     ["Zip-NeRF", "Zip-NeRF"],
     ["3D Gaussian", "3D Gaussian Splatting"],
     ["Neuralangelo", "Neuralangelo"],
+    ["Mip-Splatting", "Mip-Splatting"],
+    ["2D Gaussian", "2DGS"],
+    ["4D Gaussian", "4DGS"],
+    ["VGGT", "VGGT"],
     ["Generative Modeling by Estimating", "NCSN"],
     ["Denoising Diffusion Probabilistic", "DDPM"],
     ["Score-Based Generative", "Score SDE"],
@@ -152,20 +154,24 @@ function shortTitle(title) {
     ["VideoCrafter2", "VideoCrafter2"],
     ["Latte", "Latte"],
     ["CogVideoX", "CogVideoX"],
-    ["Solving Inverse Problems in Medical Imaging", "Score-MRI"],
+    ["Movie Gen", "Movie Gen"],
+    ["HunyuanVideo", "HunyuanVideo"],
+    ["Wan:", "Wan"],
+    ["Solving Inverse Problems in Medical Imaging", "ScoreMed"],
     ["ILVR", "ILVR"],
     ["RePaint", "RePaint"],
-    ["Palette", "Palette"],
+    ["Palette", "Pal."],
     ["Solving Linear Inverse Problems", "Denoiser"],
     ["Denoising Diffusion Restoration", "DDRM"],
     ["Diffusion Posterior Sampling", "DPS"],
     ["Manifold Constraints", "MCG"],
     ["Null-Space Model", "DDNM"],
-    ["Pseudoinverse-Guided", "PiGDM"],
+    ["Pseudoinverse-Guided", "PGDM"],
     ["DiffPIR", "DiffPIR"],
     ["RED-Diff", "RED-Diff"],
-    ["BlindDPS", "BlindDPS"],
-    ["DMPlug", "DMPlug"]
+    ["BlindDPS", "BDPS"],
+    ["DMPlug", "DMPlug"],
+    ["Efficient Diffusion Posterior Sampling", "Efficient DPS"],
   ];
   const match = aliases.find(([prefix]) => title.startsWith(prefix)) || aliases.find(([prefix]) => title.includes(prefix));
   return match ? match[1] : title.split(":")[0];
@@ -191,8 +197,8 @@ function updateViewportTransform() {
 function drawGraph() {
   const topic = activeTopic();
   const rect = graph.getBoundingClientRect();
-  const width = Math.max(1750, Math.round(rect.width || 1200));
-  const height = Math.max(900, Math.round(rect.height || 860));
+  const width = Math.max(1650, Math.round(rect.width || 1200));
+  const height = Math.max(780, Math.round(rect.height || 740));
   const { incoming, outgoing } = relationMaps(topic);
   const selectedRelations = new Set([
     ...incoming.get(selectedId).map((edge) => `${edge.source}->${edge.target}`),
@@ -294,7 +300,7 @@ function drawGraph() {
     }));
 
     const label = shortTitle(paper.title);
-    const labelWidth = Math.min(142, Math.max(48, label.length * 6.1 + 14));
+    const labelWidth = Math.min(136, Math.max(44, label.length * 5.9 + 13));
     const labelOnLeft = point.labelSide === "left";
     const labelX = labelOnLeft ? point.x - 22 : point.x + 22;
     const labelY = point.y + 4;

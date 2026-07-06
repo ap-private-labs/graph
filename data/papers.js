@@ -4,7 +4,7 @@ window.GRAPH_DATA = {
       id: "nerf",
       label: "NeRF",
       title: "NeRF and Neural Rendering",
-      years: "2020-2023",
+      years: "2020-2025",
       summary:
         "From continuous implicit fields to radiance fields, fast explicit grids, unbounded scenes, and Gaussian splatting.",
       papers: [
@@ -64,28 +64,6 @@ window.GRAPH_DATA = {
           contribution: "Used conical frustums and integrated encodings to reduce aliasing in radiance fields."
         },
         {
-          id: "plenoctrees",
-          title: "PlenOctrees for Real-time Rendering of Neural Radiance Fields",
-          year: 2021,
-          venue: "ICCV",
-          authors: ["Alex Yu", "Ruilong Li", "Matthew Tancik", "Hao Li", "Ren Ng", "Angjoo Kanazawa"],
-          area: "Acceleration",
-          citationBand: "600+",
-          url: "https://arxiv.org/abs/2103.14024",
-          contribution: "Baked trained NeRFs into sparse octrees for real-time rendering."
-        },
-        {
-          id: "kilonerf",
-          title: "KiloNeRF: Speeding up Neural Radiance Fields with Thousands of Tiny MLPs",
-          year: 2021,
-          venue: "ICCV",
-          authors: ["Christian Reiser", "Songyou Peng", "Yiyi Liao", "Andreas Geiger"],
-          area: "Acceleration",
-          citationBand: "300+",
-          url: "https://arxiv.org/abs/2103.13744",
-          contribution: "Partitioned a scene into many small MLPs to make neural rendering faster."
-        },
-        {
           id: "dnerf",
           title: "D-NeRF: Neural Radiance Fields for Dynamic Scenes",
           year: 2021,
@@ -141,17 +119,6 @@ window.GRAPH_DATA = {
           contribution: "Compressed radiance fields with tensor factorization for fast reconstruction."
         },
         {
-          id: "dvgo",
-          title: "Direct Voxel Grid Optimization: Super-fast Convergence for Radiance Fields Reconstruction",
-          year: 2022,
-          venue: "CVPR",
-          authors: ["Cheng Sun", "Min Sun", "Hwann-Tzong Chen"],
-          area: "Explicit fields",
-          citationBand: "500+",
-          url: "https://arxiv.org/abs/2111.11215",
-          contribution: "Optimized explicit voxel-grid radiance fields directly for fast convergence."
-        },
-        {
           id: "regnerf",
           title: "RegNeRF: Regularizing Neural Radiance Fields for View Synthesis from Sparse Inputs",
           year: 2022,
@@ -205,43 +172,87 @@ window.GRAPH_DATA = {
           citationBand: "600+",
           url: "https://arxiv.org/abs/2306.03092",
           contribution: "Used neural graphics primitives and numerical gradients for detailed neural surface reconstruction."
+        },
+        {
+          id: "mip-splatting",
+          title: "Mip-Splatting: Alias-free 3D Gaussian Splatting",
+          year: 2024,
+          venue: "CVPR",
+          authors: ["Zehao Yu", "Anpei Chen", "Binbin Huang", "Torsten Sattler", "Andreas Geiger"],
+          area: "Anti-aliasing",
+          citationBand: "300+",
+          url: "https://arxiv.org/abs/2311.16493",
+          contribution: "Adapted Gaussian splatting to multiscale rendering with 3D smoothing and 2D mip filters."
+        },
+        {
+          id: "2dgs",
+          title: "2D Gaussian Splatting for Geometrically Accurate Radiance Fields",
+          year: 2024,
+          venue: "SIGGRAPH",
+          authors: ["Binbin Huang", "Zehao Yu", "Anpei Chen", "Andreas Geiger", "Shenghua Gao"],
+          area: "Surface geometry",
+          citationBand: "800+",
+          url: "https://arxiv.org/abs/2403.17888",
+          contribution: "Collapsed 3D Gaussians into oriented 2D disks to improve geometric consistency and surface recovery."
+        },
+        {
+          id: "4d-gaussian",
+          title: "4D Gaussian Splatting for Real-Time Dynamic Scene Rendering",
+          year: 2024,
+          venue: "CVPR",
+          authors: ["Guanjun Wu", "Taoran Yi", "Jiemin Fang", "Lingxi Xie", "Xiaopeng Zhang"],
+          area: "Dynamic scenes",
+          citationBand: "700+",
+          url: "https://arxiv.org/abs/2310.08528",
+          contribution: "Extended Gaussian splatting to dynamic scenes with temporally varying Gaussian representations."
+        },
+        {
+          id: "vggt",
+          title: "VGGT: Visual Geometry Grounded Transformer",
+          year: 2025,
+          venue: "CVPR",
+          authors: ["Jianyuan Wang", "Minghao Chen", "Nikita Karaev", "Andrea Vedaldi", "Christian Rupprecht", "David Novotny"],
+          area: "Feed-forward 3D",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2503.11651",
+          contribution: "Predicted camera parameters, depth, point maps, and tracks from one or many views for fast 3D reconstruction."
         }
       ],
       edges: [
-        ["nerf", "fourier-features", "coordinate encodings analyzed"],
         ["fourier-features", "mip-nerf", "integrated positional encoding lineage"],
         ["nerf", "nerf-w", "unconstrained captures"],
         ["nerf", "pixelnerf", "few-view generalization"],
         ["nerf", "mip-nerf", "anti-aliasing"],
-        ["nerf", "plenoctrees", "real-time baking"],
-        ["nerf", "kilonerf", "inference acceleration"],
         ["nerf", "dnerf", "dynamic scene extension"],
         ["nerf", "plenoxels", "explicit optimization"],
-        ["plenoctrees", "plenoxels", "sparse explicit rendering"],
         ["nerf", "instant-ngp", "fast encoding and kernels"],
         ["nerf", "mip-nerf-360", "unbounded scenes"],
         ["mip-nerf", "mip-nerf-360", "anti-aliased 360 scenes"],
-        ["instant-ngp", "tensorf", "fast explicit baseline"],
         ["nerf", "tensorf", "factorized radiance fields"],
-        ["nerf", "dvgo", "direct explicit grids"],
         ["nerf", "regnerf", "sparse-view regularization"],
         ["pixelnerf", "regnerf", "few-view reconstruction lineage"],
         ["nerf", "dreamfusion", "3D representation optimized by diffusion guidance"],
         ["plenoxels", "gaussian-splatting", "explicit parameter optimization"],
         ["instant-ngp", "gaussian-splatting", "real-time baseline"],
         ["mip-nerf-360", "zipnerf", "unbounded anti-aliasing"],
-        ["zipnerf", "gaussian-splatting", "high-quality baseline"],
         ["tensorf", "gaussian-splatting", "efficient explicit baseline"],
-        ["dvgo", "gaussian-splatting", "fast explicit reconstruction"],
         ["instant-ngp", "neuralangelo", "multiresolution hash encoding for surfaces"],
-        ["nerf", "neuralangelo", "neural scene reconstruction lineage"]
+        ["nerf", "neuralangelo", "neural scene reconstruction lineage"],
+        ["gaussian-splatting", "mip-splatting", "anti-aliasing Gaussian splats"],
+        ["mip-nerf", "mip-splatting", "multiscale anti-aliasing lineage"],
+        ["gaussian-splatting", "2dgs", "surface-accurate Gaussian splatting"],
+        ["neuralangelo", "2dgs", "geometry reconstruction baseline"],
+        ["gaussian-splatting", "4d-gaussian", "dynamic Gaussian scene rendering"],
+        ["dnerf", "4d-gaussian", "dynamic scene rendering lineage"],
+        ["mip-nerf-360", "vggt", "multi-view 3D reconstruction benchmark lineage"],
+        ["gaussian-splatting", "vggt", "feed-forward reconstruction comparison"]
       ]
     },
     {
       id: "video-diffusion",
       label: "Video Diffusion",
       title: "Video Diffusion Models",
-      years: "2022-2024",
+      years: "2022-2025",
       summary:
         "Temporal denoising, text-to-video scaling, latent video models, controllable animation, and transformer-era video generators.",
       papers: [
@@ -255,17 +266,6 @@ window.GRAPH_DATA = {
           citationBand: "1k+",
           url: "https://arxiv.org/abs/2204.03458",
           contribution: "Adapted diffusion models to video with temporal architectures and video super-resolution."
-        },
-        {
-          id: "mcvd",
-          title: "Masked Conditional Video Diffusion for Prediction, Generation, and Interpolation",
-          year: 2022,
-          venue: "NeurIPS",
-          authors: ["Raoul Villegas", "Mohammad Babaeizadeh", "Pieter-Jan Kindermans", "Hernan Moraldo", "Han Zhang", "Mohammad Taghi Saffar", "Santiago Castro", "Julius Kunze", "Dumitru Erhan"],
-          area: "Video denoising",
-          citationBand: "300+",
-          url: "https://arxiv.org/abs/2205.09853",
-          contribution: "Used masking to support video prediction, unconditional generation, and interpolation."
         },
         {
           id: "make-a-video",
@@ -334,17 +334,6 @@ window.GRAPH_DATA = {
           contribution: "Extended latent diffusion with temporal layers for high-resolution video synthesis."
         },
         {
-          id: "modelscope",
-          title: "ModelScope Text-to-Video Technical Report",
-          year: 2023,
-          venue: "arXiv",
-          authors: ["ModelScope Contributors"],
-          area: "Text-to-video",
-          citationBand: "300+",
-          url: "https://arxiv.org/abs/2308.06571",
-          contribution: "Released an open text-to-video diffusion system and dataset/model recipe."
-        },
-        {
           id: "videocomposer",
           title: "VideoComposer: Compositional Video Synthesis with Motion Controllability",
           year: 2023,
@@ -376,17 +365,6 @@ window.GRAPH_DATA = {
           citationBand: "600+",
           url: "https://arxiv.org/abs/2311.15127",
           contribution: "Scaled latent video diffusion training and released a strong image-to-video model."
-        },
-        {
-          id: "videopoet",
-          title: "VideoPoet: A Large Language Model for Zero-Shot Video Generation",
-          year: 2023,
-          venue: "arXiv",
-          authors: ["Dan Kondratyuk", "Lijun Yu", "Xiuye Gu", "Jose Lezama", "Jonathan Huang", "Grant Schindler", "Rachel Hornung", "Vighnesh Birodkar", "Jimmy Yan", "Ming-Hsuan Yang", "Hartwig Adam"],
-          area: "Multimodal generation",
-          citationBand: "300+",
-          url: "https://arxiv.org/abs/2312.14125",
-          contribution: "Modeled video, image, audio, and text tokens in a unified autoregressive generation system."
         },
         {
           id: "lumiere",
@@ -431,42 +409,70 @@ window.GRAPH_DATA = {
           citationBand: "300+",
           url: "https://arxiv.org/abs/2408.06072",
           contribution: "Scaled text-to-video diffusion with expert transformer blocks and open model releases."
+        },
+        {
+          id: "movie-gen",
+          title: "Movie Gen: A Cast of Media Foundation Models",
+          year: 2024,
+          venue: "arXiv",
+          authors: ["Adam Polyak", "Amit Zohar", "Andrew Brown", "Andros Tjandra", "Animesh Sinha", "Meta Movie Gen Team"],
+          area: "Media foundation models",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2410.13720",
+          contribution: "Scaled video, audio, personalization, and editing generation with large media foundation models."
+        },
+        {
+          id: "hunyuanvideo",
+          title: "HunyuanVideo: A Systematic Framework For Large Video Generative Models",
+          year: 2024,
+          venue: "arXiv",
+          authors: ["Weijie Kong", "Qi Tian", "Zijian Zhang", "Rox Min", "Tencent HunyuanVideo Team"],
+          area: "Open video models",
+          citationBand: "500+",
+          url: "https://arxiv.org/abs/2412.03603",
+          contribution: "Released a large open-source video foundation model with data, architecture, scaling, and infrastructure recipes."
+        },
+        {
+          id: "wan",
+          title: "Wan: Open and Advanced Large-Scale Video Generative Models",
+          year: 2025,
+          venue: "arXiv",
+          authors: ["WanTeam"],
+          area: "Open video models",
+          citationBand: "100+",
+          url: "https://arxiv.org/abs/2503.20314",
+          contribution: "Presented a large open video model family covering text-to-video, image-to-video, editing, and personalization."
         }
       ],
       edges: [
-        ["video-diffusion-models", "imagen-video", "video super-resolution cascade"],
-        ["video-diffusion-models", "mcvd", "video denoising backbone"],
-        ["video-diffusion-models", "make-a-video", "temporal diffusion baseline"],
-        ["video-diffusion-models", "phenaki", "video generation baseline"],
         ["make-a-video", "text2video-zero", "text-to-video benchmark lineage"],
         ["imagen-video", "video-ldm", "high-resolution text-to-video baseline"],
-        ["phenaki", "videopoet", "long/multimodal video generation"],
-        ["video-ldm", "stable-video-diffusion", "latent video scaling"],
-        ["video-ldm", "animatediff", "latent text-to-image backbone"],
-        ["tune-a-video", "animatediff", "personalized animation comparison"],
-        ["text2video-zero", "animatediff", "image model adaptation"],
-        ["video-ldm", "modelscope", "latent text-to-video architecture"],
-        ["modelscope", "animatediff", "open text-to-video baseline"],
-        ["modelscope", "videocomposer", "open controllable text-to-video baseline"],
-        ["video-ldm", "videocomposer", "latent video diffusion backbone"],
+        ["phenaki", "movie-gen", "long video generation baseline"],
+        ["tune-a-video", "movie-gen", "personalized video generation baseline"],
+        ["make-a-video", "stable-video-diffusion", "text-to-video scaling baseline"],
+        ["imagen-video", "stable-video-diffusion", "high-resolution video diffusion baseline"],
+        ["make-a-video", "animatediff", "text-to-image/video adaptation baseline"],
+        ["video-diffusion-models", "lumiere", "video diffusion baseline"],
         ["stable-video-diffusion", "lumiere", "large-scale latent video baseline"],
         ["imagen-video", "lumiere", "high-quality diffusion video baseline"],
         ["video-ldm", "lumiere", "space-time architecture comparison"],
-        ["stable-video-diffusion", "videopoet", "large-scale video generation baseline"],
         ["video-ldm", "videocrafter2", "latent video diffusion baseline"],
-        ["videocomposer", "videocrafter2", "open video generation baseline"],
         ["stable-video-diffusion", "videocrafter2", "image-to-video scaling baseline"],
         ["video-ldm", "latte", "latent video transformer comparison"],
-        ["lumiere", "latte", "spatiotemporal generation comparison"],
-        ["latte", "cogvideox", "video diffusion transformer lineage"],
-        ["videocrafter2", "cogvideox", "open high-quality video model baseline"]
+        ["stable-video-diffusion", "cogvideox", "large-scale video diffusion baseline"],
+        ["videocomposer", "hunyuanvideo", "controllable video generation baseline"],
+        ["stable-video-diffusion", "movie-gen", "media generation baseline"],
+        ["latte", "wan", "video diffusion transformer lineage"],
+        ["cogvideox", "wan", "open video transformer baseline"],
+        ["movie-gen", "wan", "large-scale video foundation model comparison"],
+        ["hunyuanvideo", "wan", "open large-scale video model lineage"]
       ]
     },
     {
       id: "inverse-diffusion",
       label: "Diffusion Inverse Problems",
       title: "Inverse Problems with Diffusion Models",
-      years: "2019-2024",
+      years: "2019-2025",
       summary:
         "Score priors, posterior sampling, projection-free restoration, null-space guidance, plug-and-play solvers, and blind inverse problems.",
       papers: [
@@ -546,17 +552,6 @@ window.GRAPH_DATA = {
           citationBand: "1k+",
           url: "https://arxiv.org/abs/2111.05826",
           contribution: "Framed restoration and translation tasks as conditional diffusion image-to-image generation."
-        },
-        {
-          id: "sde-inverse",
-          title: "Solving Linear Inverse Problems Using the Prior Implicit in a Denoiser",
-          year: 2022,
-          venue: "NeurIPS",
-          authors: ["Bahjat Kawar", "Michael Elad", "Stefano Ermon", "Jiaming Song"],
-          area: "Denoiser priors",
-          citationBand: "300+",
-          url: "https://arxiv.org/abs/2211.17158",
-          contribution: "Connected denoiser priors and diffusion-style restoration for linear inverse problems."
         },
         {
           id: "ddrm",
@@ -656,13 +651,23 @@ window.GRAPH_DATA = {
           citationBand: "100+",
           url: "https://arxiv.org/abs/2405.16749",
           contribution: "Packaged diffusion-model priors as modular plug-ins for inverse-problem solvers."
+        },
+        {
+          id: "efficient-dps",
+          title: "Efficient Diffusion Posterior Sampling for Noisy Inverse Problems",
+          year: 2025,
+          venue: "arXiv",
+          authors: ["Ji Li", "Chao Wang"],
+          area: "Posterior sampling",
+          citationBand: "50+",
+          url: "https://arxiv.org/abs/2503.10237",
+          contribution: "Reduced diffusion posterior sampling cost with a MAP-style surrogate estimator for noisy inverse problems."
         }
       ],
       edges: [
         ["ncsn", "score-sde", "score/SDE foundation"],
         ["ddpm", "repaint", "pretrained DDPM prior"],
         ["ddpm", "palette", "conditional image-to-image diffusion"],
-        ["score-sde", "score-ip", "medical inverse score prior"],
         ["score-sde", "dps", "posterior score approximation"],
         ["score-sde", "mcg", "manifold-constrained score sampling"],
         ["score-ip", "dps", "inverse-problem score guidance"],
@@ -670,8 +675,6 @@ window.GRAPH_DATA = {
         ["palette", "diffpir", "restoration benchmark lineage"],
         ["ddrm", "ddnm", "linear inverse restoration"],
         ["ddrm", "pigdm", "pseudoinverse projection baseline"],
-        ["ddrm", "dps", "diffusion restoration baseline"],
-        ["mcg", "dps", "posterior sampling comparison"],
         ["dps", "blinddps", "blind degradation extension"],
         ["dps", "diffpir", "general inverse-problem baseline"],
         ["dps", "red-diff", "posterior/prior comparison"],
@@ -679,7 +682,10 @@ window.GRAPH_DATA = {
         ["ddnm", "dmplug", "zero-shot restoration baseline"],
         ["pigdm", "dmplug", "linear projection guidance baseline"],
         ["diffpir", "dmplug", "plug-and-play diffusion prior"],
-        ["red-diff", "dmplug", "diffusion prior restoration"]
+        ["red-diff", "dmplug", "diffusion prior restoration"],
+        ["dps", "efficient-dps", "posterior sampling baseline"],
+        ["pigdm", "efficient-dps", "projection-free efficient posterior sampling comparison"],
+        ["dmplug", "efficient-dps", "modern inverse-problem diffusion baseline"]
       ]
     }
   ]
