@@ -466,7 +466,7 @@ h1 {
 
 .node-label {
   fill: var(--ink);
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 850;
   pointer-events: none;
 }

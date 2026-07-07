@@ -138,13 +138,12 @@ function shortTitle(title) {
     ["Mip-Splatting", "Mip-Splatting"],
     ["2D Gaussian", "2DGS"],
     ["4D Gaussian", "4DGS"],
-    ["OV-NeRF", "OV-NeRF"],
-    ["NeRF-XL", "NeRF-XL"],
-    ["NeRF On-the-go", "NeRF On-the-go"],
+    ["Scaffold-GS", "Scaffold-GS"],
+    ["SuGaR", "SuGaR"],
+    ["GaussianShader", "GaussianShader"],
+    ["pixelSplat", "pixelSplat"],
+    ["CityGaussian", "CityGaussian"],
     ["VGGT", "VGGT"],
-    ["NoPe-NeRF++", "NoPe-NeRF++"],
-    ["Delta-NeRF", "Delta-NeRF"],
-    ["SAC-NeRF", "SAC-NeRF"],
     ["Generative Modeling by Estimating", "NCSN"],
     ["Denoising Diffusion Probabilistic", "DDPM"],
     ["Score-Based Generative", "Score SDE"],
@@ -330,16 +329,16 @@ function drawGraph() {
     }));
 
     const label = shortTitle(paper.title);
-    const labelWidth = Math.min(136, Math.max(44, label.length * 5.9 + 13));
+    const labelWidth = Math.min(164, Math.max(54, label.length * 6.8 + 16));
     const labelOnLeft = point.labelSide === "left";
     const labelX = labelOnLeft ? point.x - 22 : point.x + 22;
     const labelY = point.y + 4;
     group.append(makeSvg("rect", {
       class: "node-label-bg",
       x: labelOnLeft ? labelX - labelWidth + 7 : labelX - 7,
-      y: labelY - 16,
+      y: labelY - 18,
       width: labelWidth,
-      height: 24,
+      height: 27,
       rx: 6
     }));
     const text = makeSvg("text", {
