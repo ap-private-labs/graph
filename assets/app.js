@@ -11,16 +11,22 @@ const zoomOut = document.querySelector("#zoom-out");
 const zoomReset = document.querySelector("#zoom-reset");
 
 const colors = [
-  "#be4a3d",
-  "#207b7f",
-  "#6b5ca5",
-  "#b87922",
-  "#507339",
-  "#aa4f7d",
-  "#456db3",
-  "#8a6237",
-  "#d16a32",
-  "#48706b"
+  "#d94f45",
+  "#16858c",
+  "#6657c8",
+  "#b97617",
+  "#3f7d59",
+  "#b54d86",
+  "#3474bf",
+  "#8f6335",
+  "#d4662d",
+  "#4f7480",
+  "#7b6a2d",
+  "#5d6fc7",
+  "#c24f5f",
+  "#2f8a68",
+  "#9a5ab7",
+  "#6b7280"
 ];
 
 let activeTopicId = topics[0].id;
@@ -132,7 +138,13 @@ function shortTitle(title) {
     ["Mip-Splatting", "Mip-Splatting"],
     ["2D Gaussian", "2DGS"],
     ["4D Gaussian", "4DGS"],
+    ["OV-NeRF", "OV-NeRF"],
+    ["NeRF-XL", "NeRF-XL"],
+    ["NeRF On-the-go", "NeRF On-the-go"],
     ["VGGT", "VGGT"],
+    ["NoPe-NeRF++", "NoPe-NeRF++"],
+    ["Delta-NeRF", "Delta-NeRF"],
+    ["SAC-NeRF", "SAC-NeRF"],
     ["Generative Modeling by Estimating", "NCSN"],
     ["Denoising Diffusion Probabilistic", "DDPM"],
     ["Score-Based Generative", "Score SDE"],
@@ -187,6 +199,13 @@ function edgeIsActive(edge) {
   return edge.source === selectedId || edge.target === selectedId;
 }
 
+function citationLabel(paper) {
+  if (paper.citationBand === "new") {
+    return "new paper";
+  }
+  return `${paper.citationBand} citations`;
+}
+
 function updateViewportTransform() {
   const viewport = graph.querySelector("#viewport");
   if (viewport) {
@@ -220,8 +239,18 @@ function drawGraph() {
     markerHeight: "8",
     orient: "auto"
   });
-  marker.append(makeSvg("path", { d: "M 1 1 L 11 6 L 1 11 z", fill: "#6d7480" }));
-  defs.append(marker);
+  marker.append(makeSvg("path", { d: "M 1 1 L 11 6 L 1 11 z", fill: "#7f8a9b" }));
+  const activeMarker = makeSvg("marker", {
+    id: "arrowhead-active",
+    viewBox: "0 0 12 12",
+    refX: "10",
+    refY: "6",
+    markerWidth: "9",
+    markerHeight: "9",
+    orient: "auto"
+  });
+  activeMarker.append(makeSvg("path", { d: "M 1 1 L 11 6 L 1 11 z", fill: "#d94f45" }));
+  defs.append(marker, activeMarker);
   graph.append(defs);
 
   const viewport = makeSvg("g", {
@@ -230,7 +259,7 @@ function drawGraph() {
   });
 
   const yearLayer = makeSvg("g", { class: "years" });
-  for (let year = 2019; year <= layoutState.maxYear; year += 1) {
+  for (let year = layoutState.minYear; year <= layoutState.maxYear; year += 1) {
     const x = layoutState.margin.left + ((year - layoutState.minYear) / Math.max(1, layoutState.maxYear - layoutState.minYear)) * (width - layoutState.margin.left - layoutState.margin.right);
     yearLayer.append(makeSvg("line", { class: "year-line", x1: x, x2: x, y1: 42, y2: height - 48 }));
     const label = makeSvg("text", { class: "year-label", x, y: 34, "text-anchor": "middle" });
@@ -249,7 +278,7 @@ function drawGraph() {
     const path = makeSvg("path", {
       class: `edge ${active ? "active" : "quiet"}`,
       d: edgePath(source, target),
-      "marker-end": "url(#arrowhead)",
+      "marker-end": active ? "url(#arrowhead-active)" : "url(#arrowhead)",
       "data-relation": relation
     });
     edgeLayer.append(path);
@@ -265,6 +294,7 @@ function drawGraph() {
       class: `node-group ${active ? "active" : ""} ${linked ? "" : "quiet"}`,
       tabindex: "0",
       role: "button",
+      "aria-pressed": String(active),
       "aria-label": paper.title
     });
     group.addEventListener("pointerdown", (event) => {
@@ -377,7 +407,7 @@ function renderDetails() {
     <h2>${paper.title}</h2>
     <div class="meta">
       <span>${paper.area}</span>
-      <span>${paper.citationBand} citations</span>
+      <span>${citationLabel(paper)}</span>
       <span>${paper.authors.length} authors</span>
     </div>
     <p>${paper.contribution}</p>

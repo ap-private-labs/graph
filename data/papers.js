@@ -4,9 +4,9 @@ window.GRAPH_DATA = {
       id: "nerf",
       label: "NeRF",
       title: "NeRF and Neural Rendering",
-      years: "2020-2025",
+      years: "2020-2026",
       summary:
-        "From continuous implicit fields to radiance fields, fast explicit grids, unbounded scenes, and Gaussian splatting.",
+        "From continuous implicit fields to fast explicit grids, unbounded scenes, Gaussian splatting, robust capture, and newer scalable NeRF variants.",
       papers: [
         {
           id: "nerf",
@@ -207,6 +207,39 @@ window.GRAPH_DATA = {
           contribution: "Extended Gaussian splatting to dynamic scenes with temporally varying Gaussian representations."
         },
         {
+          id: "ov-nerf",
+          title: "OV-NeRF: Open-vocabulary Neural Radiance Fields with Vision and Language Foundation Models for 3D Semantic Understanding",
+          year: 2024,
+          venue: "IEEE TCSVT",
+          authors: ["Guibiao Liao", "Kaichen Zhou", "Zhenyu Bao", "Kanglin Liu", "Qing Li"],
+          area: "Semantic fields",
+          citationBand: "100+",
+          url: "https://arxiv.org/abs/2402.04648",
+          contribution: "Improved open-vocabulary semantic NeRFs with SAM-assisted region ranking and cross-view self-enhancement."
+        },
+        {
+          id: "nerf-xl",
+          title: "NeRF-XL: Scaling NeRFs with Multiple GPUs",
+          year: 2024,
+          venue: "arXiv",
+          authors: ["Ruilong Li", "Sanja Fidler", "Angjoo Kanazawa", "Francis Williams"],
+          area: "Scalable NeRFs",
+          citationBand: "100+",
+          url: "https://arxiv.org/abs/2404.16221",
+          contribution: "Distributed NeRF training and rendering across multiple GPUs to scale capacity for very large scenes."
+        },
+        {
+          id: "nerf-on-the-go",
+          title: "NeRF On-the-go: Exploiting Uncertainty for Distractor-free NeRFs in the Wild",
+          year: 2024,
+          venue: "CVPR",
+          authors: ["Weining Ren", "Zihan Zhu", "Boyang Sun", "Jiaqi Chen", "Marc Pollefeys", "Songyou Peng"],
+          area: "Robust capture",
+          citationBand: "100+",
+          url: "https://arxiv.org/abs/2405.18715",
+          contribution: "Used uncertainty to suppress distractors in casually captured in-the-wild NeRF sequences while improving convergence."
+        },
+        {
           id: "vggt",
           title: "VGGT: Visual Geometry Grounded Transformer",
           year: 2025,
@@ -216,6 +249,39 @@ window.GRAPH_DATA = {
           citationBand: "500+",
           url: "https://arxiv.org/abs/2503.11651",
           contribution: "Predicted camera parameters, depth, point maps, and tracks from one or many views for fast 3D reconstruction."
+        },
+        {
+          id: "nope-nerf-plusplus",
+          title: "NoPe-NeRF++: Local-to-Global Optimization of NeRF with No Pose Prior",
+          year: 2025,
+          venue: "arXiv",
+          authors: ["Dongbo Shi", "Shen Cao", "Bojian Wu", "Jinhui Guo", "Lubin Fan", "Renjie Chen", "Ligang Liu", "Jieping Ye"],
+          area: "Pose-free capture",
+          citationBand: "new",
+          url: "https://arxiv.org/abs/2511.17322",
+          contribution: "Combined relative pose initialization, local joint optimization, and global bundle adjustment for pose-free NeRF training."
+        },
+        {
+          id: "delta-nerf",
+          title: "Delta-NeRF: Incremental Refinement of Neural Radiance Fields through Residual Control and Knowledge Transfer",
+          year: 2025,
+          venue: "arXiv",
+          authors: ["Kriti Ghosh", "Devjyoti Chakraborty", "Lakshmish Ramaswamy", "Suchendra M. Bhandarkar", "In Kee Kim", "Nancy O'Hare", "Deepak Mishra"],
+          area: "Continual NeRFs",
+          citationBand: "new",
+          url: "https://arxiv.org/abs/2511.20804",
+          contribution: "Refined a frozen base NeRF incrementally with residual controllers, uncertainty gating, view selection, and distillation."
+        },
+        {
+          id: "sac-nerf",
+          title: "SAC-NeRF: Adaptive Ray Sampling for Neural Radiance Fields via Soft Actor-Critic Reinforcement Learning",
+          year: 2026,
+          venue: "arXiv",
+          authors: ["Chenyu Ge"],
+          area: "Sampling efficiency",
+          citationBand: "new",
+          url: "https://arxiv.org/abs/2603.15622",
+          contribution: "Learned scene-specific adaptive ray sampling policies to reduce volume-rendering samples while preserving view quality."
         }
       ],
       edges: [
@@ -244,8 +310,17 @@ window.GRAPH_DATA = {
         ["neuralangelo", "2dgs", "geometry reconstruction baseline"],
         ["gaussian-splatting", "4d-gaussian", "dynamic Gaussian scene rendering"],
         ["dnerf", "4d-gaussian", "dynamic scene rendering lineage"],
+        ["nerf", "ov-nerf", "semantic radiance field extension"],
+        ["nerf-w", "nerf-on-the-go", "robust in-the-wild capture"],
+        ["mip-nerf-360", "nerf-xl", "large-scale unbounded scenes"],
+        ["zipnerf", "nerf-xl", "scalable high-quality NeRF baseline"],
         ["mip-nerf-360", "vggt", "multi-view 3D reconstruction benchmark lineage"],
-        ["gaussian-splatting", "vggt", "feed-forward reconstruction comparison"]
+        ["gaussian-splatting", "vggt", "feed-forward reconstruction comparison"],
+        ["nerf", "nope-nerf-plusplus", "pose-free optimization"],
+        ["regnerf", "nope-nerf-plusplus", "sparse and difficult capture comparison"],
+        ["nerf", "delta-nerf", "incremental NeRF refinement"],
+        ["nerf", "sac-nerf", "adaptive volume sampling"],
+        ["instant-ngp", "sac-nerf", "efficiency-oriented NeRF lineage"]
       ]
     },
     {
